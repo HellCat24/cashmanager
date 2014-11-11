@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BaseTextView" parent="@android:style/Widget.EditText">
+        <item name="android:padding">@dimen/dimen_medium</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+</resources>
