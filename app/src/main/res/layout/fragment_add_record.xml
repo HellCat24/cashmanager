@@ -1,60 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        style="@style/BaseTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etxt_title"
-        android:layout_gravity="center_horizontal" />
-
-    <TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:layout_gravity="center_horizontal" />
-
-    <EditText
-        style="@style/BaseTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etxt_description"
-        android:layout_gravity="center_horizontal" />
-
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/category_spinner"
-        android:layout_gravity="center_horizontal" />
-
-    <ImageView
-        style="@style/BaseTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_attach"
-        android:src="@drawable/image_attachment"
-        android:layout_gravity="center_horizontal" />
-
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <Button
+        <EditText
+            style="@style/BaseEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etxt_title"
+            android:hint="@string/enter_title"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            style="@style/BaseTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_time"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            style="@style/BaseEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etxt_description"
+            android:hint="@string/enter_description"
+            android:layout_gravity="center_horizontal"/>
+
+        <EditText
+            style="@style/BaseEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:hint="@string/enter_cost"
+            android:id="@+id/etxt_cost"
+            android:layout_gravity="center_horizontal"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/category_spinner"
+            android:layout_margin="@dimen/dimen_medium"
+            android:layout_gravity="center_horizontal"/>
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ADD"
-            android:id="@+id/btn_add" />
+            android:id="@+id/img_attach"
+            android:layout_gravity="center_horizontal"/>
 
-        <Button
+        <TextView
+            style="@style/BaseTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CANCEL"
-            android:id="@+id/btn_cancel"
-            android:layout_gravity="center_horizontal" />
+            android:id="@+id/img_choose_attach"
+            android:gravity="center_vertical"
+            android:textColor="@android:color/darker_gray"
+            android:drawableLeft="@drawable/image_attachment"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/add_photo_hint"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_medium">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:layout_weight="1"
+                android:id="@+id/btn_add"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:layout_weight="1"
+                android:id="@+id/btn_cancel"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

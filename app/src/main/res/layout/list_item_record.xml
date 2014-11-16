@@ -1,49 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                xmlns:tools = "http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/dimen_medium">
+
+
 
     <TextView
+        style="@style/RecordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/txt_title"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/txt_category"
+        tools:text = "Category"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/txt_date"
-        android:layout_toRightOf="@+id/txt_title"
-        android:layout_toEndOf="@+id/txt_title" />
+        android:layout_toEndOf="@+id/txt_date"
+        android:layout_toRightOf="@+id/txt_date"/>
 
     <TextView
+        style="@style/RecordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/txt_date"
+        android:id="@+id/txt_title"
+        tools:text = "Title"
+        android:singleLine="true"
+        android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/txt_title"
-        android:layout_toEndOf="@+id/txt_title" />
+        android:layout_toRightOf="@+id/txt_date"
+        android:layout_toEndOf="@+id/txt_date"
+        android:layout_alignRight="@+id/txt_category"
+        android:layout_alignEnd="@+id/txt_category"/>
 
     <TextView
+        style="@style/RecordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:id="@+id/txt_date"
+        tools:text = "Date"
+        />
+
+    <TextView
+        style="@style/RecordTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/txt_description"
+        tools:text = "Description"
+        android:singleLine="true"
         android:layout_toRightOf="@+id/txt_category"
-        android:layout_toEndOf="@+id/txt_category" />
+        android:layout_toEndOf="@+id/txt_category"
+        android:layout_toLeftOf="@+id/txt_cost"
+        android:layout_toStartOf="@+id/txt_cost"/>
 
     <TextView
+        style="@style/RecordTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/txt_cost"
+        tools:text = "cost"
+        android:singleLine="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

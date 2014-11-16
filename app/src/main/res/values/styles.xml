@@ -1,12 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="BaseTextView" parent="@android:style/Widget.EditText">
+    <style name="BaseEditText" parent="@android:style/Widget.EditText">
         <item name="android:padding">@dimen/dimen_medium</item>
+        <item name="android:layout_margin">@dimen/dimen_medium</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BaseTextView" parent="@android:style/Widget.TextView">
+        <item name="android:padding">@dimen/dimen_medium</item>
+        <item name="android:layout_margin">@dimen/dimen_medium</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="RecordTextView" parent="@android:style/Widget.TextView">
+        <item name="android:padding">@dimen/dimen_small</item>
+        <item name="android:layout_margin">@dimen/dimen_small</item>
         <!-- Customize your theme here. -->
     </style>
 

@@ -7,5 +7,14 @@
 
     <string name="add_record">Add Record</string>
     <string name="add_budget">Add Budget</string>
+    <string name="enter_title">Enter title</string>
+    <string name="enter_description">Enter description</string>
+    <string name="add">ADD</string>
+    <string name="cancel">CANCEL</string>
+    <string name="tab_date">Date</string>
+    <string name="tab_time">Time</string>
+    <string name="enter_cost">Enter cost</string>
+    <string name="add_photo_hint">Click to add photo</string>
+    <string name="record_added">Record added</string>
 
 </resources>

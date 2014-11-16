@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cashmanager.helo.com" >
+    package="cashmanager.helo.com">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="21" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
 
         <activity
-            android:name="ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,10 +26,7 @@
             </intent-filter>
         </activity>
 
-        <meta-data android:name="DATABASE" android:value="budget.db" />
-        <meta-data android:name="VERSION" android:value="1.0" />
-        <meta-data android:name="QUERY_LOG" android:value="true" />
-        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="cashmanager.helo.come" />
+
 
     </application>
 
