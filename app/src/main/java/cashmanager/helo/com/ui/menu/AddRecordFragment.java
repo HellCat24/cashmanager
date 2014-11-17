@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,6 @@ import cashmanager.helo.com.view.Utils;
  */
 public class AddRecordFragment extends Fragment {
 
-    private EditText mTitle;
     private EditText mDatePicker;
     private EditText mCost;
     private EditText mDescription;
@@ -39,7 +39,7 @@ public class AddRecordFragment extends Fragment {
 
     private String mBitmapPath;
 
-    private Spinner mCategory;
+    private MultiAutoCompleteTextView mCategory;
 
     private ImageView mAttachmentImage;
 
@@ -51,8 +51,6 @@ public class AddRecordFragment extends Fragment {
     private ImageRetriever mImageRetriever;
 
     private Date mDate;
-
-    private int mCategoryId;
 
     private RecordsDataSource mRecordsDataSource;
 
@@ -70,10 +68,9 @@ public class AddRecordFragment extends Fragment {
 
     private void initUI(View view) {
 
-        mTitle = (EditText) view.findViewById(R.id.etxt_title);
         mDatePicker = (EditText) view.findViewById(R.id.txt_time);
         mDescription = (EditText) view.findViewById(R.id.etxt_description);
-        mCategory = (Spinner) view.findViewById(R.id.category_spinner);
+        mCategory = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_category);
         mChooseImage = (TextView) view.findViewById(R.id.img_choose_attach);
         mAttachmentImage = (ImageView) view.findViewById(R.id.img_attach);
         mCost = (EditText) view.findViewById(R.id.etxt_cost);
@@ -126,13 +123,6 @@ public class AddRecordFragment extends Fragment {
 
     private void addRecord() {
 
-        String title = mTitle.getText().toString();
-
-        if(TextUtils.isEmpty(title)){
-            mTitle.setError("Please set title");
-            return;
-        }
-
         String description = mDescription.getText().toString();
 
         String date = mDatePicker.getText().toString();
@@ -147,7 +137,6 @@ public class AddRecordFragment extends Fragment {
         Integer cost = Integer.parseInt(costString);
 
         Record record= new Record();
-        record.title = title;
         record.description = description;
         record.date = mDate;
         record.cost = cost;

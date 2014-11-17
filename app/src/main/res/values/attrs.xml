@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="CustomProgressBar">
+
+        <attr name="radius" format="dimension" />
+        <attr name="width" format="dimension" />
+
+        <attr name="textSize" format="dimension" />
+
+        <attr name="progressColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="borderColor" format="color" />
+        <attr name="textColor" format="color" />
+
+        <attr name="startGradientColor" format="color" />
+        <attr name="endGradientColor" format="color" />
+
+        <attr name="isShowProgress" format="boolean" />
+        <attr name="isGradientAvailable" format="boolean" />
+        <attr name="isSpinning" format="boolean" />
+
+        <attr name="text" format="string" />
+
+        <attr name="increment" format="integer" />
+        <attr name="speed" format="integer" />
+
+        <attr name="padding" format="integer" />
+
+        <attr name="labelPosition" format="enum">
+
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+    </declare-styleable>
+
+</resources>

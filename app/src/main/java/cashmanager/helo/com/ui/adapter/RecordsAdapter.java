@@ -48,7 +48,6 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_record, null);
             holder = new RecordHolder();
-            holder.title = (TextView) convertView.findViewById(R.id.txt_title);
             holder.date = (TextView) convertView.findViewById(R.id.txt_date);
             holder.category = (TextView) convertView.findViewById(R.id.txt_category);
             holder.description = (TextView) convertView.findViewById(R.id.txt_description);
@@ -65,7 +64,6 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
 
     private void initItem(RecordHolder holder, Record item) {
         holder.date.setText(Utils.getDate(item.date));
-        holder.title.setText(item.title);
         holder.description.setText(item.description);
         //holder.category.setText(item.category.title);
         if (item.cost > 0) {
@@ -77,7 +75,6 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
     }
 
     public class RecordHolder {
-        private TextView title;
         private TextView date;
         private TextView category;
         private TextView description;

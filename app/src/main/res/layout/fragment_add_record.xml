@@ -10,14 +10,6 @@
         android:layout_height="match_parent">
 
         <EditText
-            style="@style/BaseEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/etxt_title"
-            android:hint="@string/enter_title"
-            android:layout_gravity="center_horizontal"/>
-
-        <EditText
             style="@style/BaseTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,12 +34,14 @@
             android:id="@+id/etxt_cost"
             android:layout_gravity="center_horizontal"/>
 
-        <Spinner
+        <MultiAutoCompleteTextView
+            style="@style/BaseEditText"
+            android:id="@+id/etxt_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/category_spinner"
-            android:layout_margin="@dimen/dimen_medium"
-            android:layout_gravity="center_horizontal"/>
+            android:hint="@string/category_hint"
+            android:layout_marginTop="65dp"
+            android:ems="10"/>
 
         <ImageView
             android:layout_width="wrap_content"

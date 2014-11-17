@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <cashmanager.helo.com.view.CustomProgressBar
+        android:id="@+id/budget_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/dimen_extra_large"
+        custom:isSpinning="false"
+        custom:speed="10"
+        custom:startGradientColor="@android:color/holo_green_dark"
+        custom:endGradientColor="@android:color/holo_green_light"
+        custom:radius="64dp"
+        custom:text="0"
+        />
+
+    <TextView
+        android:id="@+id/txt_empty_budget"
+        style="@style/BaseTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/empty_budget_message"/>
+
+    <EditText
+        android:id="@+id/etxt_budget"
+        style="@style/BaseEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ems="10"
+        android:hint="Enter your budget"
+        android:inputType="number"
+        android:visibility="invisible"/>
+
+</LinearLayout>

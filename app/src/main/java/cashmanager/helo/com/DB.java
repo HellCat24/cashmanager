@@ -5,7 +5,6 @@ public class DB {
     public static final String RECORD_TABLE = " CREATE TABLE "
             + RecordTableInfo.TBL_NAME + " ( "
             + RecordTableInfo.COL_ID + " INTEGER PRIMARY KEY NOT NULL, "
-            + RecordTableInfo.COL_TITLE + " VARCHAR(255), "
             + RecordTableInfo.COL_DATE + " INTEGER, "
             + RecordTableInfo.COL_DESCRIPTION + " VARCHAR(255), "
             + RecordTableInfo.COL_COST + " sq "
@@ -38,7 +37,6 @@ public class DB {
     public static final class RecordTableInfo {
         public static final String TBL_NAME = "records";
         public static final String COL_ID = "id";
-        public static final String COL_TITLE = "title";
         public static final String COL_DATE = "date";
         public static final String COL_DESCRIPTION = "description";
         public static final String COL_COST = "cost";

@@ -16,5 +16,7 @@
     <string name="enter_cost">Enter cost</string>
     <string name="add_photo_hint">Click to add photo</string>
     <string name="record_added">Record added</string>
+    <string name="empty_budget_message">Seems like your don\'t have any money. Click to add some</string>
+    <string name="category_hint">Enter category</string>
 
 </resources>

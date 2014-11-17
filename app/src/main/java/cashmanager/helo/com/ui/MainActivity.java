@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import cashmanager.helo.com.R;
-import cashmanager.helo.com.ui.menu.AddMoneyFragment;
+import cashmanager.helo.com.ui.menu.BudgetFragment;
 import cashmanager.helo.com.ui.menu.AddRecordFragment;
 import cashmanager.helo.com.ui.menu.RecordListFragment;
 
@@ -68,7 +68,7 @@ public class MainActivity extends FragmentActivity {
                 setFragment(new AddRecordFragment(), AddRecordFragment.class.getSimpleName());
                 break;
             case R.id.action_add_money:
-                setFragment(new AddMoneyFragment(), AddMoneyFragment.class.getSimpleName());
+                setFragment(new BudgetFragment(), BudgetFragment.class.getSimpleName());
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -15,7 +15,6 @@ public class RecordsDataSource extends PizzaDataSource {
     private static final String TAG = RecordsDataSource.class.getSimpleName();
     private String[] showColumns = {
             DB.RecordTableInfo.COL_ID,
-            DB.RecordTableInfo.COL_TITLE,
             DB.RecordTableInfo.COL_DATE,
             DB.RecordTableInfo.COL_DESCRIPTION,
             DB.RecordTableInfo.COL_COST,
@@ -30,10 +29,9 @@ public class RecordsDataSource extends PizzaDataSource {
         Record record = new Record();
 
         record.id = cursor.getInt(0);
-        record.title = cursor.getString(1);
-        record.date = new Date(cursor.getLong(2));
-        record.description = cursor.getString(3);
-        record.cost = cursor.getInt(4);
+        record.date = new Date(cursor.getLong(1));
+        record.description = cursor.getString(2);
+        record.cost = cursor.getInt(3);
 
         return record;
     }
@@ -59,15 +57,13 @@ public class RecordsDataSource extends PizzaDataSource {
     public void addRecord(Record record) {
         ContentValues values = new ContentValues();
 
-
-        values.put(DB.RecordTableInfo.COL_TITLE, record.title);
         values.put(DB.RecordTableInfo.COL_DATE, record.date.getTime());
         values.put(DB.RecordTableInfo.COL_DESCRIPTION, record.description);
         values.put(DB.RecordTableInfo.COL_COST, record.cost);
         //values.put(DB.RecordTableInfo.COL_FILE_PATH, record.);
 
         if (record.id > 0) {
-
+            values.put(DB.RecordTableInfo.COL_ID, record.id);
         } else {
             try {
                 getRWDb().insert(DB.RecordTableInfo.TBL_NAME, null, values);

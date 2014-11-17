@@ -11,8 +11,6 @@ public class Record {
 
     public int id;
 
-    public String title;
-
     public Date date;
 
     public String description;
@@ -35,7 +33,6 @@ public class Record {
         if (!cost.equals(record.cost)) return false;
         if (!date.equals(record.date)) return false;
         if (!description.equals(record.description)) return false;
-        if (!title.equals(record.title)) return false;
 
         return true;
     }
@@ -43,7 +40,6 @@ public class Record {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + title.hashCode();
         result = 31 * result + date.hashCode();
         result = 31 * result + description.hashCode();
         result = 31 * result + cost.hashCode();
