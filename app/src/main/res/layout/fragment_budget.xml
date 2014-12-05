@@ -36,8 +36,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:ems="10"
-        android:hint="Enter your budget"
+        android:hint="@string/enter_your_budget"
         android:inputType="number"
         android:visibility="invisible"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_funds"
+        android:id="@+id/btn_add_budget"
+        android:layout_gravity="center_horizontal"
+        android:padding="@dimen/dimen_medium"
+        android:visibility="invisible"/>
+
 
 </LinearLayout>

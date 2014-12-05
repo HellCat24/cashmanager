@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import cashmanager.helo.com.DBHelper;
+import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.R;
-import cashmanager.helo.com.RecordsDataSource;
+import cashmanager.helo.com.db.data.RecordsData;
 import cashmanager.helo.com.model.bd.Record;
 import cashmanager.helo.com.ui.adapter.RecordsAdapter;
 
@@ -23,7 +23,7 @@ public class RecordListFragment extends Fragment {
     private ListView mRecordsList;
     private RecordsAdapter mRecordsAdapter;
 
-    private RecordsDataSource mRecordsDataSource;
+    private RecordsData mRecordsDataSource;
 
     private List<Record> mRecords;
 

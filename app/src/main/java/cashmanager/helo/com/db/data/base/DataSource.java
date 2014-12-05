@@ -1,4 +1,4 @@
-package cashmanager.helo.com;
+package cashmanager.helo.com.db.data.base;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,14 +6,16 @@ import android.util.Log;
 
 import java.sql.SQLException;
 
-public class PizzaDataSource {
-    private static final String TAG = PizzaDataSource.class.getSimpleName();
+import cashmanager.helo.com.db.DBHelper;
+
+public class DataSource {
+    private static final String TAG = DataSource.class.getSimpleName();
     private DBHelper mDBHelper;
 
-    public PizzaDataSource() {
+    public DataSource() {
     }
 
-    public PizzaDataSource(DBHelper dbHelper) {
+    public DataSource(DBHelper dbHelper) {
         mDBHelper = dbHelper;
     }
 

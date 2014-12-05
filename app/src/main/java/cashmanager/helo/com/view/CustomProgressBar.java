@@ -129,7 +129,7 @@ public class CustomProgressBar extends View {
         invalidate();
     }
 
-    public void updatePrjgressTo(int progress) {
+    public void updateProgressTo(int progress) {
         isSpinning = false;
         isUpdateProgress = true;
         progressToUpdate = progress;

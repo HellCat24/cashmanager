@@ -1,4 +1,4 @@
-package cashmanager.helo.com;
+package cashmanager.helo.com.db.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -9,41 +9,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cashmanager.helo.com.db.data.base.DataSource;
+import cashmanager.helo.com.db.DB;
+import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.model.bd.Record;
 
-public class RecordsDataSource extends PizzaDataSource {
-    private static final String TAG = RecordsDataSource.class.getSimpleName();
-    private String[] showColumns = {
-            DB.RecordTableInfo.COL_ID,
-            DB.RecordTableInfo.COL_DATE,
-            DB.RecordTableInfo.COL_DESCRIPTION,
-            DB.RecordTableInfo.COL_COST,
-            DB.RecordTableInfo.COL_FILE_PATH
-    };
+public class RecordsData extends DataSource {
+    private static final String TAG = RecordsData.class.getSimpleName();
 
-    public RecordsDataSource(DBHelper dbHelper) {
+    public RecordsData(DBHelper dbHelper) {
         super(dbHelper);
-    }
-
-    private Record parseDbCursorToAddition(Cursor cursor) {
-        Record record = new Record();
-
-        record.id = cursor.getInt(0);
-        record.date = new Date(cursor.getLong(1));
-        record.description = cursor.getString(2);
-        record.cost = cursor.getInt(3);
-
-        return record;
     }
 
     public List<Record> getRecordList() {
         List<Record> additionDOList = new ArrayList<Record>();
         Cursor cursor;
         try {
-            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, showColumns, null, null, null, null, null);
+            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                Record additionDO = parseDbCursorToAddition(cursor);
+                Record additionDO = new Record(cursor);
                 additionDOList.add(additionDO);
                 cursor.moveToNext();
             }
@@ -60,7 +45,7 @@ public class RecordsDataSource extends PizzaDataSource {
         values.put(DB.RecordTableInfo.COL_DATE, record.date.getTime());
         values.put(DB.RecordTableInfo.COL_DESCRIPTION, record.description);
         values.put(DB.RecordTableInfo.COL_COST, record.cost);
-        //values.put(DB.RecordTableInfo.COL_FILE_PATH, record.);
+        //values.put(DB.RecordTableInfo.COL_FILE_PATH, record.a);
 
         if (record.id > 0) {
             values.put(DB.RecordTableInfo.COL_ID, record.id);

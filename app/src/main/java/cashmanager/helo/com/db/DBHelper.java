@@ -1,8 +1,12 @@
-package cashmanager.helo.com;
+package cashmanager.helo.com.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import cashmanager.helo.com.Consts;
+import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.db.data.RecordsData;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String TAG = DBHelper.class.getSimpleName();
@@ -13,12 +17,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
 
-    private RecordsDataSource mRecordsDataSource;
+    private RecordsData mRecordsDataSource;
+    private BudgetData mBudgetDataSource;
 
     private DBHelper(Context context) {
         super(context, Consts.DB_PATH, null, DB_VERSION);
 
-        mRecordsDataSource = new RecordsDataSource(this);
+        mRecordsDataSource = new RecordsData(this);
+        mBudgetDataSource = new BudgetData(this);
     }
 
     /**
@@ -41,6 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
         mDatabase.execSQL(DB.CATEGORY_TABLE);
         mDatabase.execSQL(DB.ATTACHMENT_TABLE);
         mDatabase.execSQL(DB.RECORD_CATEGORY_TABLE);
+        mDatabase.execSQL(DB.BUDGET_TABLE);
 
         onUpgrade(db, 0, DB_VERSION);
     }
@@ -50,7 +57,11 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public RecordsDataSource getRecordsDataSource() {
+    public RecordsData getRecordsDataSource() {
         return mRecordsDataSource;
+    }
+
+    public BudgetData getBudgetDataSource() {
+        return mBudgetDataSource;
     }
 }

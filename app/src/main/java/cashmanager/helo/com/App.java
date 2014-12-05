@@ -14,6 +14,8 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import java.io.File;
 
+import cashmanager.helo.com.db.DBHelper;
+
 /**
  * Created by Mazhukin Oleh on 16.11.2014.
  */

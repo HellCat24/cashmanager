@@ -13,15 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
 
-import cashmanager.helo.com.DBHelper;
+import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.R;
-import cashmanager.helo.com.RecordsDataSource;
+import cashmanager.helo.com.db.data.RecordsData;
 import cashmanager.helo.com.model.bd.Record;
 import cashmanager.helo.com.utils.ImageRetriever;
 import cashmanager.helo.com.view.DateTimePicker;
@@ -52,7 +51,7 @@ public class AddRecordFragment extends Fragment {
 
     private Date mDate;
 
-    private RecordsDataSource mRecordsDataSource;
+    private RecordsData mRecordsDataSource;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

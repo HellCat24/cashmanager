@@ -1,4 +1,4 @@
-package cashmanager.helo.com;
+package cashmanager.helo.com.db;
 
 public class DB {
 
@@ -7,7 +7,7 @@ public class DB {
             + RecordTableInfo.COL_ID + " INTEGER PRIMARY KEY NOT NULL, "
             + RecordTableInfo.COL_DATE + " INTEGER, "
             + RecordTableInfo.COL_DESCRIPTION + " VARCHAR(255), "
-            + RecordTableInfo.COL_COST + " sq "
+            + RecordTableInfo.COL_COST + " INTEGER, "
             + RecordTableInfo.COL_CATEGORY_ID + " INTEGER, "
             + RecordTableInfo.COL_FILE_PATH + " VARCHAR(255) "
             + " );";
@@ -30,8 +30,15 @@ public class DB {
     public static final String RECORD_CATEGORY_TABLE = " CREATE TABLE "
             + RecordCategoryTableInfo.TBL_NAME + " ( "
             + RecordCategoryTableInfo.COL_ID + " INTEGER PRIMARY KEY NOT NULL, "
-            + RecordCategoryTableInfo.COL_RECORD_ID + " INTEGER "
+            + RecordCategoryTableInfo.COL_RECORD_ID + " INTEGER, "
             + RecordCategoryTableInfo.COL_CATEGORY_ID + " VARCHAR(255) "
+            + " );";
+
+    public static final String BUDGET_TABLE = " CREATE TABLE "
+            + BudgetTableInfo.TBL_NAME + " ( "
+            + BudgetTableInfo.COL_ID + " INTEGER PRIMARY KEY NOT NULL, "
+            + BudgetTableInfo.COL_DATE + " INTEGER, "
+            + BudgetTableInfo.COL_VALUE + " INTEGER "
             + " );";
 
     public static final class RecordTableInfo {
@@ -64,5 +71,12 @@ public class DB {
         public static final String COL_RECORD_ID = "record_id";
         public static final String COL_TITLE = "title";
         public static final String COL_FILE_PATH = "file_path";
+    }
+
+    public static final class BudgetTableInfo {
+        public static final String TBL_NAME = "Budget";
+        public static final String COL_ID = "id";
+        public static final String COL_DATE = "date";
+        public static final String COL_VALUE = "value";
     }
 }

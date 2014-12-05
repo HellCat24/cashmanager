@@ -1,6 +1,7 @@
 package cashmanager.helo.com.model.bd;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import java.util.Date;
 
@@ -44,5 +45,14 @@ public class Record {
         result = 31 * result + description.hashCode();
         result = 31 * result + cost.hashCode();
         return result;
+    }
+
+    public Record(){}
+
+    public Record(Cursor cursor){
+        id = cursor.getInt(0);
+        date = new Date(cursor.getLong(1));
+        description = cursor.getString(2);
+        cost = cursor.getInt(3);
     }
 }
