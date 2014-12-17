@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/report_main_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <cashmanager.helo.com.view.CustomProgressBar
+            android:id="@+id/report_diagram"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_extra_large"
+            custom:isDiagram="true"
+            custom:radius="64dp"
+            custom:text="0" />
+
+        <TextView
+            android:id="@+id/txt_max_price"
+            style="@style/ReportTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/report_diagram"
+            android:layout_toEndOf="@+id/report_diagram"
+            android:layout_toRightOf="@+id/report_diagram"
+            android:text="New Text" />
+
+        <TextView
+            android:id="@+id/txt_min_price"
+            style="@style/ReportTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txt_week"
+            android:layout_alignStart="@+id/txt_week"
+            android:layout_below="@+id/txt_max_price"
+            android:text="New Text" />
+
+        <TextView
+            android:id="@+id/txt_week"
+            style="@style/ReportTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txt_month"
+            android:layout_alignStart="@+id/txt_month"
+            android:layout_below="@+id/txt_min_price"
+            android:text="New Text" />
+
+        <TextView
+            android:id="@+id/txt_month"
+            style="@style/ReportTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txt_max_price"
+            android:layout_alignStart="@+id/txt_max_price"
+            android:layout_below="@+id/txt_week"
+            android:text="New Text" />
+
+        <TextView
+            android:id="@+id/txt_bughet_left"
+            style="@style/ReportTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/txt_month"
+            android:layout_alignStart="@+id/txt_month"
+            android:layout_below="@+id/txt_month"
+            android:text="New Text" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/report_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_medium" />
+
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="No Records" />
+
+</LinearLayout>

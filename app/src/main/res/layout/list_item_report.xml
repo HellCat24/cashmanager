@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools = "http://schemas.android.com/apk/res/android"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dimen_medium">
+    xmlns:tools = "http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/dimen_medium">
+
+    <ImageView
+        android:id="@+id/img_color"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="@dimen/dimen_medium"/>
 
     <TextView
         style="@style/RecordTextView"
@@ -14,7 +20,7 @@
         android:id="@+id/txt_category"
         tools:text = "Category"
         android:layout_gravity="center_horizontal"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/img_color"
         android:layout_toRightOf="@+id/txt_cost"
         android:layout_toEndOf="@+id/txt_cost" />
 
@@ -24,7 +30,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/txt_date"
         tools:text = "Date"
-        />
+        android:layout_alignTop="@+id/img_color"
+        android:layout_toRightOf="@+id/img_color"
+        android:layout_toEndOf="@+id/img_color" />
 
     <TextView
         style="@style/RecordTextView"
@@ -33,6 +41,7 @@
         android:id="@+id/txt_description"
         tools:text = "Description"
         android:singleLine="true"
+        android:layout_alignTop="@+id/img_color"
         android:layout_toRightOf="@+id/txt_category"
         android:layout_toEndOf="@+id/txt_category" />
 
@@ -43,6 +52,7 @@
         android:id="@+id/txt_cost"
         tools:text = "cost"
         android:singleLine="true"
+        android:layout_alignTop="@+id/img_color"
         android:layout_toRightOf="@+id/txt_date"
-        android:layout_toEndOf="@+id/txt_date"/>
+        android:layout_toEndOf="@+id/txt_date" />
 </RelativeLayout>

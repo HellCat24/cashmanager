@@ -30,10 +30,11 @@ public class BudgetData extends DataSource {
         Budget budget = null;
         Cursor cursor;
         try {
-            cursor = getRWDb().query(DB.BudgetTableInfo.TBL_NAME, null, DB.BudgetTableInfo.COL_ID, new String[]{String.valueOf(CURRENT_BUDGET)}, null, null, null);
-            cursor.moveToFirst();
-            budget = new Budget(cursor);
-            cursor.close();
+            cursor = getRWDb().query(DB.BudgetTableInfo.TBL_NAME, null, DB.BudgetTableInfo.COL_ID + " = " + CURRENT_BUDGET, null, null, null, null);
+            if(cursor.moveToFirst()){
+                budget = new Budget(cursor);
+                cursor.close();
+            }
         } catch (SQLException e) {
             Log.e(TAG, "SQLException getBudgetList()", e);
         }

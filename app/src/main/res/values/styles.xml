@@ -20,7 +20,15 @@
     <style name="RecordTextView" parent="@android:style/Widget.TextView">
         <item name="android:padding">@dimen/dimen_small</item>
         <item name="android:layout_margin">@dimen/dimen_small</item>
+        <item name="android:gravity">center</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="ReportTextView" parent="@android:style/Widget.TextView">
+        <item name="android:padding">@dimen/dimen_small</item>
+        <item name="android:gravity">center</item>
+        <!-- Customize your theme here. -->
+    </style>
+
 
 </resources>

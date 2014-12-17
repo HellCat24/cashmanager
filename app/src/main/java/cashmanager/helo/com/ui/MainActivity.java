@@ -9,13 +9,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import cashmanager.helo.com.R;
+import cashmanager.helo.com.data.MyMenu;
+import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.ui.menu.BudgetFragment;
 import cashmanager.helo.com.ui.menu.AddRecordFragment;
 import cashmanager.helo.com.ui.menu.RecordListFragment;
+import cashmanager.helo.com.ui.menu.ReportFragment;
 
 
 public class MainActivity extends FragmentActivity {
@@ -33,20 +38,38 @@ public class MainActivity extends FragmentActivity {
         mFragmentManager = getFragmentManager();
         initFragments(savedInstanceState);
         initUI();
+        int max = DBHelper.get().getRecordsDataSource().getMaxPrice();
+        int min = DBHelper.get().getRecordsDataSource().getMinPrice();
+        DBHelper.get().getRecordsDataSource().getWeekPrice();
     }
 
     private void initUI() {
         mMenuTitles = getResources().getStringArray(R.array.menu);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mMenuTitles));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MyMenu item = MyMenu.values()[position];
+                switch (item) {
+                    case RECORDS:
+                        setFragment(new RecordListFragment(), RecordListFragment.class.getName());
+                        break;
+                    case REPORT:
+                        setFragment(new ReportFragment(), ReportFragment.class.getName());
+                        break;
+                    case SETTINGS:
+                        setFragment(new SettingsFragment(), SettingsFragment.class.getName());
+                        break;
+                }
+                mDrawerLayout.closeDrawers();
+            }
+        });
     }
 
     private void initFragments(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.content_frame, new RecordListFragment())
-                    .commit();
-        }
+       setFragment(new RecordListFragment(), RecordListFragment.class.getName());
     }
 
     @Override

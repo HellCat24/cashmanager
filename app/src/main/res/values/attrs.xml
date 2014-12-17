@@ -19,6 +19,7 @@
         <attr name="isShowProgress" format="boolean" />
         <attr name="isGradientAvailable" format="boolean" />
         <attr name="isSpinning" format="boolean" />
+        <attr name="isDiagram" format="boolean" />
 
         <attr name="text" format="string" />
 

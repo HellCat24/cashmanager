@@ -15,6 +15,10 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import cashmanager.helo.com.R;
 
 @SuppressLint({"DrawAllocation", "HandlerLeak"})
@@ -25,6 +29,10 @@ public class CustomProgressBar extends View {
     public static int MEDIUM = 48;
 
     public static int SMALL = 32;
+
+    public interface OnDiagramComplete {
+        public void onDiagramComplete(float sum, int[] colors);
+    }
 
     private final double ONE_PERCENT_IN_DEGREES = 3.6;
 
@@ -64,12 +72,19 @@ public class CustomProgressBar extends View {
     private boolean isGradientAvailable;
     private boolean isShowProgress;
     private boolean isUpdateProgress;
+    private boolean isDiagram;
 
     private String text;
 
     private RectF outside;
     private RectF middle;
     private RectF inside;
+
+    private float[] diagramAngles;
+    private int[] colors;
+    private float sum;
+
+    private OnDiagramComplete diagramComplete;
 
     private Handler spinHandler = new Handler() {
 
@@ -97,20 +112,37 @@ public class CustomProgressBar extends View {
     @Override
     protected synchronized void onDraw(Canvas canvas) {
 
-        canvas.drawArc(outside, 0, 360, false, borderPaint);
-        canvas.drawArc(inside, 0, 360, false, borderPaint);
-        canvas.drawArc(middle, 0, 360, false, backgroundPaint);
+        if (!isDiagram) {
+            canvas.drawArc(outside, 0, 360, false, borderPaint);
+            canvas.drawArc(inside, 0, 360, false, borderPaint);
+            canvas.drawArc(middle, 0, 360, false, backgroundPaint);
 
-        if (isSpinning) {
-            canvas.drawArc(middle, currentProgress, 50, false, mainPaint);
+            if (isSpinning) {
+                canvas.drawArc(middle, currentProgress, 50, false, mainPaint);
+            } else {
+                int currentProgress = (int) (this.currentProgress * ONE_PERCENT_IN_DEGREES);
+                canvas.drawArc(middle, 0, currentProgress, false, mainPaint);
+                if (isShowProgress) {
+                    canvas.drawText(Integer.toString((int) (currentProgress / ONE_PERCENT_IN_DEGREES)), centerX, centerY + 5, textPaint);
+                }
+            }
+            if (text != null) canvas.drawText(text, centerX, centerY + textSize / 2, textPaint);
         } else {
-            int currentProgress = (int) (this.currentProgress * ONE_PERCENT_IN_DEGREES);
-            canvas.drawArc(middle, 0, currentProgress, false, mainPaint);
-            if (isShowProgress) {
-                canvas.drawText(Integer.toString((int) (currentProgress / ONE_PERCENT_IN_DEGREES)), centerX, centerY + 5, textPaint);
+            if (diagramAngles != null) {
+                for (int i = 0; i < diagramAngles.length; i++) {
+                    if(colors[i] == 0){
+                        colors[i] = getRandomColor();
+                    }
+                    backgroundPaint.setColor(colors[i]);
+                    if (i == 0) {
+                        canvas.drawArc(middle, 0, diagramAngles[i] + 2, false, backgroundPaint);
+                    } else {
+                        canvas.drawArc(middle, diagramAngles[i - 1], Math.abs(diagramAngles[i] - diagramAngles[i - 1]) + 2, false, backgroundPaint);
+                    }
+                }
+                diagramComplete.onDiagramComplete(sum, colors);
             }
         }
-        if (text != null) canvas.drawText(text, centerX, centerY + textSize / 2, textPaint);
         super.onDraw(canvas);
     }
 
@@ -296,6 +328,7 @@ public class CustomProgressBar extends View {
 
         try {
             isSpinning = a.getBoolean(R.styleable.CustomProgressBar_isSpinning, true);
+            isDiagram = a.getBoolean(R.styleable.CustomProgressBar_isDiagram, false);
 
             outsideRadius = a.getDimension(R.styleable.CustomProgressBar_radius, MEDIUM);
             width = a.getDimension(R.styleable.CustomProgressBar_width, outsideRadius / 5);
@@ -328,5 +361,28 @@ public class CustomProgressBar extends View {
         } finally {
             a.recycle();
         }
+    }
+
+    public void setDiagramParams(List<Float> integers, OnDiagramComplete diagramComplete) {
+        this.diagramComplete = diagramComplete;
+        isDiagram = true;
+        isSpinning = false;
+        diagramAngles = new float[integers.size()];
+        colors = new int[integers.size()];
+        for (Float number : integers) {
+            sum += number;
+        }
+        for (int i = 0; i < integers.size(); i++) {
+            if (i == 0) {
+                diagramAngles[i] = (float) ((integers.get(i) * 100.0 / sum) * ONE_PERCENT_IN_DEGREES);
+            } else {
+                diagramAngles[i] = (float) ((integers.get(i) * 100.0 / sum) * ONE_PERCENT_IN_DEGREES + diagramAngles[i - 1]);
+            }
+        }
+    }
+
+    private int getRandomColor() {
+        Random rnd = new Random();
+        return Color.argb(255, rnd.nextInt(128) + 128, rnd.nextInt(128) + 128, rnd.nextInt(128) + 128);
     }
 }

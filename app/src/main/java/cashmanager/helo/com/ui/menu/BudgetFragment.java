@@ -24,8 +24,10 @@ import cashmanager.helo.com.view.CustomProgressBar;
  */
 public class BudgetFragment extends Fragment implements View.OnClickListener {
 
-    private EditText mBudgetText;
     private TextView mEmptyBudgetMessage;
+
+    private EditText mAddBudgetEditText;
+
     private CustomProgressBar mBudgetBar;
 
     private Button mAddBudgetBtn;
@@ -44,7 +46,7 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initUI(View view) {
-        mBudgetText = (EditText) view.findViewById(R.id.etxt_budget);
+        mAddBudgetEditText = (EditText) view.findViewById(R.id.etxt_budget);
         mBudgetBar = (CustomProgressBar) view.findViewById(R.id.budget_bar);
         mEmptyBudgetMessage = (TextView) view.findViewById(R.id.txt_empty_budget);
         mAddBudgetBtn = (Button) view.findViewById(R.id.btn_add_budget);
@@ -64,9 +66,11 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_empty_budget:
-                if (mBudgetText.getVisibility() == View.INVISIBLE) {
+                if (mAddBudgetEditText.getVisibility() == View.INVISIBLE) {
                     Animation fadeIn = new AlphaAnimation(0, 1);
+                    Animation fadeOut = new AlphaAnimation(1, 0);
                     fadeIn.setDuration(getResources().getInteger(R.integer.mediumAnimationTime));
+                    fadeOut.setDuration(getResources().getInteger(R.integer.mediumAnimationTime));
                     fadeIn.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
@@ -76,7 +80,8 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
                         @Override
                         public void onAnimationEnd(Animation animation) {
                             mAddBudgetBtn.setVisibility(View.VISIBLE);
-                            mBudgetText.setVisibility(View.GONE);
+                            mAddBudgetEditText.setVisibility(View.VISIBLE);
+                            mEmptyBudgetMessage.setVisibility(View.INVISIBLE);
                         }
 
                         @Override
@@ -84,13 +89,14 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
 
                         }
                     });
-                    mBudgetText.startAnimation(fadeIn);
+                    mEmptyBudgetMessage.startAnimation(fadeOut);
+                    mAddBudgetEditText.startAnimation(fadeIn);
                     mAddBudgetBtn.startAnimation(fadeIn);
                 }
                 break;
 
             case R.id.btn_add_budget:
-                int addedBudget = Integer.parseInt(mBudgetText.getText().toString());
+                int addedBudget = Integer.parseInt(mAddBudgetEditText.getText().toString());
                 mBudgetValue = mBudgetValue + addedBudget;
                 mBudgetBar.updateProgressTo(mBudgetValue);
                 mBudgetBar.setText(Integer.toString(mBudgetValue));
