@@ -25,6 +25,8 @@ import cashmanager.helo.com.ui.menu.ReportFragment;
 
 public class MainActivity extends FragmentActivity {
 
+    public static String ACTION_REPORT = "action_report";
+
     private FragmentManager mFragmentManager;
 
     private String[] mMenuTitles;
@@ -38,9 +40,6 @@ public class MainActivity extends FragmentActivity {
         mFragmentManager = getFragmentManager();
         initFragments(savedInstanceState);
         initUI();
-        int max = DBHelper.get().getRecordsDataSource().getMaxPrice();
-        int min = DBHelper.get().getRecordsDataSource().getMinPrice();
-        DBHelper.get().getRecordsDataSource().getWeekPrice();
     }
 
     private void initUI() {
@@ -109,7 +108,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
-        if (mFragmentManager.getBackStackEntryCount() > 0) {
+        if (mFragmentManager.getBackStackEntryCount() > 1) {
             mFragmentManager.popBackStack();
         } else {
             super.onBackPressed();

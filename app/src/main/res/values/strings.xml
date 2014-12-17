@@ -20,5 +20,11 @@
     <string name="category_hint">Enter category</string>
     <string name="enter_your_budget">Enter your budget</string>
     <string name="add_funds">Add funds</string>
+    <string name="settings_notification">notification_preference</string>
+    <string name="settings_private">private</string>
+    <string name="settings_private_password">private_password</string>
+    <string name="settings_limitations_per_day">limitations_per_day</string>
+    <string name="settings_limitations_per_week">limitations_per_week</string>
+    <string name="settings_limitations_per_month">limitations_per_month</string>
 
 </resources>

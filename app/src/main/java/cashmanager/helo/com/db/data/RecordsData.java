@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +18,8 @@ import cashmanager.helo.com.model.bd.Record;
 public class RecordsData extends DataSource {
     private static final String TAG = RecordsData.class.getSimpleName();
 
+    public enum TimeSearchType {DAY, WEEK, MONTH}
+
     public RecordsData(DBHelper dbHelper) {
         super(dbHelper);
     }
@@ -29,6 +29,36 @@ public class RecordsData extends DataSource {
         Cursor cursor;
         try {
             cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Record additionDO = new Record(cursor);
+                additionDOList.add(additionDO);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException getRecordList()", e);
+        }
+        return additionDOList;
+    }
+
+    public List<Record> getRecordListWithinDates(TimeSearchType searchType) {
+        List<Record> additionDOList = new ArrayList<Record>();
+        Date[] dates = null;
+        switch (searchType) {
+            case DAY:
+                dates = getDayDates();
+                break;
+            case WEEK:
+                dates = getWeekDates();
+                break;
+            case MONTH:
+                dates = getMonthDates();
+                break;
+        }
+        Cursor cursor;
+        try {
+            cursor = getRWDb().rawQuery("select * from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime(), null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Record additionDO = new Record(cursor);
@@ -70,37 +100,50 @@ public class RecordsData extends DataSource {
         return minPrice;
     }
 
-    public int getWeekPrice() {
-        int weekPrice = 0;
+    public int getRecordsPrice(TimeSearchType timeSearchType) {
+        int dayPrice = 0;
         Cursor cursor;
-        Date[] dates = getWeekDays();
+        Date[] dates = null;
+
+        switch (timeSearchType) {
+            case DAY:
+                dates = getDayDates();
+                break;
+            case WEEK:
+                dates = getWeekDates();
+                break;
+            case MONTH:
+                dates = getMonthDates();
+                break;
+        }
+
         try {
             cursor = getRWDb().rawQuery("select sum(cost) from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime(), null);
             cursor.moveToFirst();
-            weekPrice = cursor.getInt(0);
+            dayPrice = cursor.getInt(0);
             cursor.close();
         } catch (SQLException e) {
-            Log.e(TAG, "SQLException getWeekPrice()", e);
+            Log.e(TAG, "SQLException getRecordsPrice()", e);
         }
-        return weekPrice;
+        return dayPrice;
     }
 
-    public int getMonthPrice() {
-        int monthPrice = 0;
-        Cursor cursor;
-        Date[] dates = getMonthDays();
-        try {
-            cursor = getRWDb().rawQuery("select sum(cost) from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime(), null);
-            cursor.moveToFirst();
-            monthPrice = cursor.getInt(0);
-            cursor.close();
-        } catch (SQLException e) {
-            Log.e(TAG, "SQLException getMonthPrice()", e);
+    private Date[] getDayDates() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
+        calendar.set(year, month, day, 0, 0, 0);
+
+        Date[] dates = new Date[2];
+        for (int i = 0; i < 2; i++) {
+            dates[i] = calendar.getTime();
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-        return monthPrice;
+        return dates;
     }
 
-    private Date[] getWeekDays() {
+    private Date[] getWeekDates() {
         Calendar calendar = Calendar.getInstance();
         calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
@@ -113,7 +156,7 @@ public class RecordsData extends DataSource {
         return dates;
     }
 
-    private Date[] getMonthDays() {
+    private Date[] getMonthDates() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
 

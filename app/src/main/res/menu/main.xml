@@ -3,17 +3,17 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/action_add_record"
-        android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/add_record"
-        android:orderInCategory="100"
-        android:showAsAction="always" />
-
-    <item
         android:id="@+id/action_add_money"
         android:icon="@android:drawable/ic_input_add"
         android:title="@string/add_budget"
         android:orderInCategory="100"
         android:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_add_record"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/add_record"
+        android:orderInCategory="100"
+        android:showAsAction="always" />
 
 </menu>

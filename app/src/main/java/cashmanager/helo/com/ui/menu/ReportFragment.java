@@ -92,8 +92,8 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     private void initData() {
         mMaxPrice.setText("Max cost: "+mRecordsData.getMaxPrice());
         mMinPrice.setText("Min cost: "+mRecordsData.getMinPrice());
-        mWeekOverAll.setText("Week overall: "+ mRecordsData.getWeekPrice() + "");
-        mMonthOverAll.setText("Month overall: " +mRecordsData.getMonthPrice() + "");
+        mWeekOverAll.setText("Week overall: "+ mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.WEEK) + "");
+        mMonthOverAll.setText("Month overall: " +mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.MONTH) + "");
         if (mRecordsData.getRecordList().size() > 0) {
             initDiagram();
         }

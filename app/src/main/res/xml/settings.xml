@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="Notification Settings">
+
+        <CheckBoxPreference
+            android:key="@string/settings_notification"
+            android:summary="Available"
+            android:title="Notification" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Private mode">
+
+        <CheckBoxPreference
+            android:key="@string/settings_private"
+            android:summary="Available"
+            android:title="Private mode" />
+
+        <EditTextPreference
+            android:dependency="private"
+            android:dialogTitle="Enter password"
+
+            android:key="@string/settings_private_password"
+            android:summary="Click to enter"
+            android:title="Private mode password" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Limitations">
+
+        <cashmanager.helo.com.IntEditTextPreference
+            android:dialogTitle="Enter day costs limit"
+            android:key="@string/settings_limitations_per_day"
+            android:summary="Enter max day cost"
+            android:numeric="integer"
+            android:title="Limit Day Costs" />
+
+        <cashmanager.helo.com.IntEditTextPreference
+            android:dialogTitle="Enter week costs limit"
+            android:key="@string/settings_limitations_per_week"
+            android:summary="Enter max week cost"
+            android:numeric="integer"
+            android:title="Limit Week Costs" />
+
+        <cashmanager.helo.com.IntEditTextPreference
+            android:dialogTitle="Enter week costs limit"
+            android:key="@string/settings_limitations_per_month"
+            android:summary="Enter max monthly cost"
+            android:numeric="integer"
+            android:title="Limit Month Costs" />
+    </PreferenceCategory>
+</PreferenceScreen>
