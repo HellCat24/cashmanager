@@ -62,7 +62,7 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
         return convertView;
     }
 
-    public void deleteItem(int position){
+    public void deleteItem(int position) {
         mItemsList.remove(position);
     }
 
@@ -70,11 +70,7 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
         holder.date.setText(Utils.getDate(item.date));
         holder.description.setText(item.description);
         //holder.category.setText(item.category.title);
-        if (item.cost > 0) {
-            holder.cost.setTextColor(Color.GREEN);
-        } else {
-            holder.cost.setTextColor(Color.RED);
-        }
+        holder.cost.setTextColor(Color.RED);
         holder.cost.setText(Integer.toString(Math.abs(item.cost)));
     }
 

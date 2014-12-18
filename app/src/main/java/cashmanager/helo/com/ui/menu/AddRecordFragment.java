@@ -153,7 +153,7 @@ public class AddRecordFragment extends Fragment {
             return;
         }
 
-        Integer cost = -Integer.parseInt(costString);
+        Integer cost = Integer.parseInt(costString);
 
         Record record = new Record();
         record.description = description;
@@ -164,7 +164,7 @@ public class AddRecordFragment extends Fragment {
             record.attachment = new Attachment();
             record.attachment.file = mBitmapPath;
         }*/
-        mBudgetData.updateBudget(mBudgetValue + record.cost);
+        mBudgetData.updateBudget(mBudgetValue - record.cost);
         mRecordsDataSource.addRecord(record);
 
         checkLimitations();
@@ -226,15 +226,10 @@ public class AddRecordFragment extends Fragment {
                         .setContentTitle(title)
                         .setContentText(String.format(message, spendCost));
         Intent resultIntent = new Intent(getActivity(), MainActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(getActivity(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder.setContentIntent(contentIntent);
         NotificationManager mNotificationManager =
                 (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, mBuilder.build());
