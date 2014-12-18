@@ -18,7 +18,9 @@ import cashmanager.helo.com.model.bd.Budget;
  */
 public class BudgetData extends DataSource {
 
-    private static final int CURRENT_BUDGET = 0;
+    public static final int EMPTY_BUDGET = 0;
+
+    private static final int CURRENT_BUDGET = 1;
 
     private static final String TAG = RecordsData.class.getSimpleName();
 
@@ -31,7 +33,7 @@ public class BudgetData extends DataSource {
         Cursor cursor;
         try {
             cursor = getRWDb().query(DB.BudgetTableInfo.TBL_NAME, null, DB.BudgetTableInfo.COL_ID + " = " + CURRENT_BUDGET, null, null, null, null);
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 budget = new Budget(cursor);
                 cursor.close();
             }
@@ -41,7 +43,7 @@ public class BudgetData extends DataSource {
         if (budget != null) {
             return budget.value;
         } else {
-            return 0;
+            return EMPTY_BUDGET;
         }
     }
 
@@ -49,7 +51,7 @@ public class BudgetData extends DataSource {
         List<Budget> budgets = new ArrayList<Budget>();
         Cursor cursor;
         try {
-            cursor = getRWDb().query(DB.BudgetTableInfo.TBL_NAME, null, null, null, null, null, null);
+            cursor = getRWDb().query(DB.BudgetTableInfo.TBL_NAME, null, DB.BudgetTableInfo.COL_ID + " > " + CURRENT_BUDGET, null, null, null, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Budget budget = new Budget(cursor);
@@ -70,9 +72,21 @@ public class BudgetData extends DataSource {
         values.put(DB.BudgetTableInfo.COL_VALUE, budget.value);
 
         try {
-            getRWDb().insert(DB.RecordTableInfo.TBL_NAME, null, values);
+            getRWDb().insert(DB.BudgetTableInfo.TBL_NAME, null, values);
         } catch (SQLException e) {
             Log.e(TAG, "SQLException addBudgetRecord()", e);
+        }
+    }
+
+    public void updateBudget(int value) {
+        ContentValues values = new ContentValues();
+
+        values.put(DB.BudgetTableInfo.COL_VALUE, value);
+
+        try {
+            getRWDb().update(DB.BudgetTableInfo.TBL_NAME, values, DB.BudgetTableInfo.COL_ID + " = " + CURRENT_BUDGET, null);
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException updateBudget()", e);
         }
     }
 

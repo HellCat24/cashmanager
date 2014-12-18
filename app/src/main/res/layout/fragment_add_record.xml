@@ -43,6 +43,13 @@
             android:layout_marginTop="65dp"
             android:ems="10"/>
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Is private"
+            android:id="@+id/privateCheckBox"
+            android:layout_margin="@dimen/dimen_medium"/>
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

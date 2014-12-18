@@ -1,11 +1,17 @@
 package cashmanager.helo.com.ui.menu;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,11 +32,13 @@ public class RecordListFragment extends Fragment {
     private RecordsData mRecordsDataSource;
 
     private List<Record> mRecords;
+    private SharedPreferences mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_record_list, container, false);
         mRecordsDataSource = DBHelper.get().getRecordsDataSource();
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         initUI(rootView);
         return rootView;
     }
@@ -38,10 +46,25 @@ public class RecordListFragment extends Fragment {
     private void initUI(View view) {
         mRecordsList = (ListView) view.findViewById(R.id.records_list);
         mRecordsList.setEmptyView(view.findViewById(android.R.id.empty));
+        mRecordsList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
+                b.setIcon(android.R.drawable.ic_dialog_alert);
+                b.setPositiveButton("Delete dialog", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        mRecordsAdapter.deleteItem(position);
+                        mRecordsDataSource.deleteRecord(mRecordsAdapter.getItem(position).id);
+                    }
+                });
+                b.show();
+                return false;
+            }
+        });
     }
 
     private void initData() {
-        List<Record> records = mRecordsDataSource.getRecordList();
+        List<Record> records = mRecordsDataSource.getRecordList(mSettings.getBoolean(getString(R.string.settings_private), false));
         if (records != null) {
             if (mRecords == null) {
                 initAdapter(records);
@@ -59,7 +82,7 @@ public class RecordListFragment extends Fragment {
 
         private Record mRecord;
 
-        public  onEditRecord(Record record){
+        public onEditRecord(Record record) {
             mRecord = record;
         }
 

@@ -24,11 +24,15 @@ public class RecordsData extends DataSource {
         super(dbHelper);
     }
 
-    public List<Record> getRecordList() {
+    public List<Record> getRecordList(boolean isPrivate) {
         List<Record> additionDOList = new ArrayList<Record>();
         Cursor cursor;
         try {
-            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
+            if(isPrivate){
+                cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
+            } else {
+                cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_IS_PRIVATE + "=" + (isPrivate ? 1: 0), null, null, null, null);
+            }
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Record additionDO = new Record(cursor);
@@ -42,7 +46,7 @@ public class RecordsData extends DataSource {
         return additionDOList;
     }
 
-    public List<Record> getRecordListWithinDates(TimeSearchType searchType) {
+    public List<Record> getRecordListWithinDates(TimeSearchType searchType, boolean isPrivate) {
         List<Record> additionDOList = new ArrayList<Record>();
         Date[] dates = null;
         switch (searchType) {
@@ -58,7 +62,7 @@ public class RecordsData extends DataSource {
         }
         Cursor cursor;
         try {
-            cursor = getRWDb().rawQuery("select * from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime(), null);
+            cursor = getRWDb().rawQuery("select * from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime() +", " + DB.RecordTableInfo.COL_IS_PRIVATE + "=" + "=" + (isPrivate ? 1: 0), null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Record additionDO = new Record(cursor);
@@ -174,6 +178,7 @@ public class RecordsData extends DataSource {
         values.put(DB.RecordTableInfo.COL_DATE, record.date.getTime());
         values.put(DB.RecordTableInfo.COL_DESCRIPTION, record.description);
         values.put(DB.RecordTableInfo.COL_COST, record.cost);
+        values.put(DB.RecordTableInfo.COL_IS_PRIVATE, record.isPrivate);
         //values.put(DB.RecordTableInfo.COL_FILE_PATH, record.a);
 
         if (record.id > 0) {
@@ -189,7 +194,7 @@ public class RecordsData extends DataSource {
 
     public void deleteRecord(int recordID) {
         try {
-            getRWDb().delete(DB.RecordTableInfo.TBL_NAME, DB.RecordTableInfo.COL_ID, new String[]{String.valueOf(recordID)});
+            getRWDb().delete(DB.RecordTableInfo.TBL_NAME, DB.RecordTableInfo.COL_ID + "=" + recordID, null);
         } catch (SQLException e) {
             Log.e(TAG, "SQLException deleteRecord", e);
         }

@@ -1,7 +1,9 @@
 package cashmanager.helo.com.ui.menu;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +46,15 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     private TextView mMonthOverAll;
     private TextView mBudgetLeft;
 
+    private SharedPreferences mSettings;
+
     private int mBudgetValue;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
         DBHelper dbHelper = DBHelper.get();
+        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mRecordsData = dbHelper.getRecordsDataSource();
         mBudgetData = dbHelper.getBudgetDataSource();
         initUI(view);
@@ -94,14 +99,14 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         mMinPrice.setText("Min cost: "+mRecordsData.getMinPrice());
         mWeekOverAll.setText("Week overall: "+ mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.WEEK) + "");
         mMonthOverAll.setText("Month overall: " +mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.MONTH) + "");
-        if (mRecordsData.getRecordList().size() > 0) {
+        if (mRecordsData.getRecordList(mSettings.getBoolean(getString(R.string.settings_private), false)).size() > 0) {
             initDiagram();
         }
     }
 
     private void initDiagram() {
         final List<Float> floats = new ArrayList<Float>();
-        final List<Record> records = mRecordsData.getRecordList();
+        final List<Record> records = mRecordsData.getRecordList(mSettings.getBoolean(getString(R.string.settings_private), false));
         final List<ReportItem> reports = new ArrayList<ReportItem>();
         for (Record record : records) {
             reports.add(new ReportItem(record));

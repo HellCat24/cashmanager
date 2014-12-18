@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
@@ -44,6 +45,7 @@ public class AddRecordFragment extends Fragment {
     private EditText mCost;
     private EditText mDescription;
     private TextView mChooseImage;
+    private CheckBox mPrivate;
 
     private String mBitmapPath;
 
@@ -65,6 +67,8 @@ public class AddRecordFragment extends Fragment {
     private RecordsData mRecordsDataSource;
     private BudgetData mBudgetData;
 
+    private int mBudgetValue;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_record, container, false);
@@ -82,6 +86,7 @@ public class AddRecordFragment extends Fragment {
 
     private void initUI(View view) {
 
+        mPrivate = (CheckBox) view.findViewById(R.id.privateCheckBox);
         mDatePicker = (EditText) view.findViewById(R.id.txt_time);
         mDescription = (EditText) view.findViewById(R.id.etxt_description);
         mCategory = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_category);
@@ -154,10 +159,12 @@ public class AddRecordFragment extends Fragment {
         record.description = description;
         record.date = mDate;
         record.cost = cost;
+        record.isPrivate = mPrivate.isChecked();
         /*if(mBitmapPath!=null){
             record.attachment = new Attachment();
             record.attachment.file = mBitmapPath;
         }*/
+        mBudgetData.updateBudget(mBudgetValue + record.cost);
         mRecordsDataSource.addRecord(record);
 
         checkLimitations();
@@ -234,6 +241,7 @@ public class AddRecordFragment extends Fragment {
     }
 
     private void initData() {
+        mBudgetValue = mBudgetData.getCurrentBudget();
         mDatePicker.setText(Utils.getDateAndTime(mDate));
     }
 

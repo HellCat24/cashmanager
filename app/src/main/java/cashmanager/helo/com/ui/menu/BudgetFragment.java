@@ -9,14 +9,17 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.db.data.BudgetData;
 import cashmanager.helo.com.model.bd.Budget;
+import cashmanager.helo.com.ui.adapter.BudgetAdapter;
 import cashmanager.helo.com.view.CustomProgressBar;
 
 /**
@@ -25,8 +28,12 @@ import cashmanager.helo.com.view.CustomProgressBar;
 public class BudgetFragment extends Fragment implements View.OnClickListener {
 
     private TextView mEmptyBudgetMessage;
+    private TextView mIncomesTitle;
 
     private EditText mAddBudgetEditText;
+
+    private ListView mBudgetListView;
+    private BudgetAdapter mBudgetAdapter;
 
     private CustomProgressBar mBudgetBar;
 
@@ -46,6 +53,8 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initUI(View view) {
+        mIncomesTitle = (TextView) view.findViewById(R.id.txt_incomes_title);
+        mBudgetListView = (ListView) view.findViewById(R.id.budget_list_view);
         mAddBudgetEditText = (EditText) view.findViewById(R.id.etxt_budget);
         mBudgetBar = (CustomProgressBar) view.findViewById(R.id.budget_bar);
         mEmptyBudgetMessage = (TextView) view.findViewById(R.id.txt_empty_budget);
@@ -56,9 +65,14 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
 
     private void initData() {
         mBudgetValue = mBudgetData.getCurrentBudget();
-        if (mBudgetValue > 0) {
+        if (mBudgetValue != BudgetData.EMPTY_BUDGET) {
+            mBudgetListView.setAdapter(new BudgetAdapter(getActivity(), mBudgetData.getBudgetList()));
             mBudgetBar.updateProgressTo(mBudgetValue);
-            mEmptyBudgetMessage.performClick();
+            mAddBudgetBtn.setVisibility(View.VISIBLE);
+            mAddBudgetEditText.setVisibility(View.VISIBLE);
+            mIncomesTitle.setVisibility(View.VISIBLE);
+            mEmptyBudgetMessage.setVisibility(View.GONE);
+            mBudgetBar.setText(mBudgetValue + "");
         }
     }
 
@@ -66,6 +80,7 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txt_empty_budget:
+
                 if (mAddBudgetEditText.getVisibility() == View.INVISIBLE) {
                     Animation fadeIn = new AlphaAnimation(0, 1);
                     Animation fadeOut = new AlphaAnimation(1, 0);
@@ -96,11 +111,25 @@ public class BudgetFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.btn_add_budget:
+
                 int addedBudget = Integer.parseInt(mAddBudgetEditText.getText().toString());
-                mBudgetValue = mBudgetValue + addedBudget;
+
+                mBudgetValue = mBudgetValue+addedBudget;
+
+                Budget budget = new Budget(new Date(), addedBudget);
+
+                mBudgetData.addBudgetRecord(budget);
+                mBudgetData.updateBudget(mBudgetValue);
+
+                if(mBudgetAdapter==null){
+                    mBudgetAdapter = new BudgetAdapter(getActivity(), new ArrayList<Budget>());
+                    mBudgetListView.setAdapter(mBudgetAdapter);
+                }
+                mBudgetAdapter.add(budget);
+
                 mBudgetBar.updateProgressTo(mBudgetValue);
                 mBudgetBar.setText(Integer.toString(mBudgetValue));
-                mBudgetData.addBudgetRecord(new Budget(new Date(), addedBudget));
+
                 break;
         }
     }

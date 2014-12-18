@@ -4,7 +4,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
@@ -14,9 +16,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Date;
+
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.data.MyMenu;
 import cashmanager.helo.com.db.DBHelper;
+import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.model.bd.Budget;
 import cashmanager.helo.com.ui.menu.BudgetFragment;
 import cashmanager.helo.com.ui.menu.AddRecordFragment;
 import cashmanager.helo.com.ui.menu.RecordListFragment;
@@ -30,6 +36,7 @@ public class MainActivity extends FragmentActivity {
     private FragmentManager mFragmentManager;
 
     private String[] mMenuTitles;
+    private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -39,6 +46,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         mFragmentManager = getFragmentManager();
         initFragments(savedInstanceState);
+        initData();
         initUI();
     }
 
@@ -65,10 +73,57 @@ public class MainActivity extends FragmentActivity {
                 mDrawerLayout.closeDrawers();
             }
         });
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+                0,  /* "open drawer" description */
+                0  /* "close drawer" description */
+        ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(getString(R.string.app_name));
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle("Menu");
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+    }
+
+    private void initData(){
+        BudgetData data =  DBHelper.get().getBudgetDataSource();
+        if(data.getBudgetList().size()==0){
+            data.addBudgetRecord(new Budget(new Date(), BudgetData.EMPTY_BUDGET));
+        }
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     private void initFragments(Bundle savedInstanceState) {
-       setFragment(new RecordListFragment(), RecordListFragment.class.getName());
+        setFragment(new RecordListFragment(), RecordListFragment.class.getName());
     }
 
     @Override
@@ -92,6 +147,9 @@ public class MainActivity extends FragmentActivity {
             case R.id.action_add_money:
                 setFragment(new BudgetFragment(), BudgetFragment.class.getSimpleName());
                 break;
+        }
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -6,12 +6,13 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+
     <cashmanager.helo.com.view.CustomProgressBar
         android:id="@+id/budget_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/dimen_extra_large"
+        android:layout_margin="@dimen/dimen_big"
         custom:isSpinning="false"
         custom:speed="10"
         custom:startGradientColor="@android:color/holo_green_dark"
@@ -20,34 +21,60 @@
         custom:text="0"
         />
 
-    <TextView
-        android:id="@+id/txt_empty_budget"
-        style="@style/BaseTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:text="@string/empty_budget_message"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etxt_budget"
-        style="@style/BaseEditText"
+        <TextView
+            android:id="@+id/txt_empty_budget"
+            style="@style/BaseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/empty_budget_message"/>
+
+        <EditText
+            android:id="@+id/etxt_budget"
+            style="@style/BaseEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="@string/enter_your_budget"
+            android:inputType="number"
+            android:visibility="invisible"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_funds"
+            android:id="@+id/btn_add_budget"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/dimen_medium"
+            android:visibility="gone"
+            android:layout_below="@+id/etxt_budget"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/txt_incomes_title"
+            style="@style/BaseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_below="@+id/btn_add_budget"
+            android:text="Incomes"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:ems="10"
-        android:hint="@string/enter_your_budget"
-        android:inputType="number"
-        android:visibility="invisible"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_funds"
-        android:id="@+id/btn_add_budget"
-        android:layout_gravity="center_horizontal"
-        android:padding="@dimen/dimen_medium"
-        android:visibility="invisible"/>
+        android:id="@+id/budget_list_view"
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>

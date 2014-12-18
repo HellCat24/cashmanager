@@ -18,6 +18,10 @@ public class Record {
 
     public Integer cost;
 
+    public boolean isPrivate;
+
+
+
     //public Category category;
 
     //public Attachment attachment;
