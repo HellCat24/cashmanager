@@ -1,11 +1,12 @@
 package cashmanager.helo.com.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateTime {
+public class DateTime implements Serializable {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Date mDate;

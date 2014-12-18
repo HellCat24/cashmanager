@@ -22,7 +22,7 @@ public class BudgetData extends DataSource {
 
     private static final int CURRENT_BUDGET = 1;
 
-    private static final String TAG = RecordsData.class.getSimpleName();
+    private static final String TAG = BudgetData.class.getSimpleName();
 
     public BudgetData(DBHelper dbHelper) {
         super(dbHelper);

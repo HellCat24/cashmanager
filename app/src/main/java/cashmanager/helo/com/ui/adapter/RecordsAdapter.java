@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cashmanager.helo.com.R;
+import cashmanager.helo.com.model.ReportItem;
 import cashmanager.helo.com.model.bd.Record;
 import cashmanager.helo.com.view.Utils;
 
@@ -85,5 +88,44 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
         mItemsList.clear();
         mItemsList.addAll(itemsList);
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults filterResults = new FilterResults();
+                List<Record> tempList = new ArrayList<Record>();
+
+                if (constraint != null && mItemsList != null) {
+                    String query = constraint.toString();
+                    int length = mItemsList.size();
+                    int i = 0;
+                    while (i < length) {
+                        Record item = mItemsList.get(i);
+                        if (item.description.contains(constraint) || item.date.toString().startsWith(query) /*|| item.category.title.startsWith(query)*/) {
+                            tempList.add(item);
+                        }
+                        i++;
+                    }
+
+                    filterResults.values = tempList;
+                    filterResults.count = tempList.size();
+                }
+                return filterResults;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence contraint, FilterResults results) {
+                mItemsList = (ArrayList<Record>) results.values;
+                if (results.count > 0) {
+                    notifyDataSetChanged();
+                } else {
+                    notifyDataSetInvalidated();
+                }
+            }
+        };
     }
 }

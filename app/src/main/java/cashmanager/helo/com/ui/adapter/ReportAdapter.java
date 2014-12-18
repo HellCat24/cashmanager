@@ -6,14 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.model.ReportItem;
 import cashmanager.helo.com.model.bd.Record;
+import cashmanager.helo.com.view.DateTimePicker;
 import cashmanager.helo.com.view.Utils;
 
 /**
@@ -91,5 +95,7 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
         mItemsList.addAll(itemsList);
         this.notifyDataSetChanged();
     }
+
+
 }
 

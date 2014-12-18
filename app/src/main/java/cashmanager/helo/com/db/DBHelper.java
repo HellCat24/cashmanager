@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import cashmanager.helo.com.Consts;
 import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.db.data.CategoryData;
 import cashmanager.helo.com.db.data.RecordsData;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -19,12 +20,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private RecordsData mRecordsDataSource;
     private BudgetData mBudgetDataSource;
+    private CategoryData mCategoryData;
 
     private DBHelper(Context context) {
         super(context, Consts.DB_PATH, null, DB_VERSION);
 
         mRecordsDataSource = new RecordsData(this);
         mBudgetDataSource = new BudgetData(this);
+        mCategoryData = new CategoryData(this);
     }
 
     /**
@@ -63,5 +66,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public BudgetData getBudgetDataSource() {
         return mBudgetDataSource;
+    }
+
+    public CategoryData getCategoryData() {
+        return mCategoryData;
     }
 }

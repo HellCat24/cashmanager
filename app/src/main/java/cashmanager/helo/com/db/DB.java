@@ -18,8 +18,7 @@ public class DB {
     public static final String CATEGORY_TABLE = " CREATE TABLE "
             + CategoryTableInfo.TBL_NAME + " ( "
             + CategoryTableInfo.COL_ID + " INTEGER PRIMARY KEY NOT NULL, "
-            + CategoryTableInfo.COL_TITLE + " VARCHAR(255), "
-            + CategoryTableInfo.COL_DESCRIPTION + " VARCHAR(255) "
+            + CategoryTableInfo.COL_TITLE + " VARCHAR(255)"
             + " );";
 
     public static final String ATTACHMENT_TABLE = " CREATE TABLE "
@@ -62,7 +61,6 @@ public class DB {
         public static final String TBL_NAME = "category";
         public static final String COL_ID = "id";
         public static final String COL_TITLE = "title";
-        public static final String COL_DESCRIPTION = "description";
     }
 
     public static final class RecordCategoryTableInfo {

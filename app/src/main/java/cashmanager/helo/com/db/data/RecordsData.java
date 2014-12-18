@@ -13,10 +13,32 @@ import java.util.List;
 import cashmanager.helo.com.db.data.base.DataSource;
 import cashmanager.helo.com.db.DB;
 import cashmanager.helo.com.db.DBHelper;
+import cashmanager.helo.com.model.bd.Category;
 import cashmanager.helo.com.model.bd.Record;
 
 public class RecordsData extends DataSource {
     private static final String TAG = RecordsData.class.getSimpleName();
+
+    public String[] getRecordsTitle() {
+        String[] titles = new String[0];
+        Cursor cursor;
+        try {
+            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
+            cursor.moveToFirst();
+            int i = 0;
+            while (!cursor.isAfterLast()) {
+                titles = new String[cursor.getCount()];
+                titles[i] = cursor.getString(2);
+                cursor.moveToNext();
+                i++;
+            }
+            cursor.close();
+
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException getRecordList()", e);
+        }
+        return titles;
+    }
 
     public enum TimeSearchType {DAY, WEEK, MONTH}
 
@@ -28,18 +50,12 @@ public class RecordsData extends DataSource {
         List<Record> additionDOList = new ArrayList<Record>();
         Cursor cursor;
         try {
-            if(isPrivate){
+            if (isPrivate) {
                 cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
             } else {
-                cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_IS_PRIVATE + "=" + (isPrivate ? 1: 0), null, null, null, null);
+                cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_IS_PRIVATE + "=" + "'" + (isPrivate ? 1 : 0) + "'", null, null, null, null);
             }
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Record additionDO = new Record(cursor);
-                additionDOList.add(additionDO);
-                cursor.moveToNext();
-            }
-            cursor.close();
+            additionDOList = parseRecordFromCursor(cursor);
         } catch (SQLException e) {
             Log.e(TAG, "SQLException getRecordList()", e);
         }
@@ -47,7 +63,6 @@ public class RecordsData extends DataSource {
     }
 
     public List<Record> getRecordListWithinDates(TimeSearchType searchType, boolean isPrivate) {
-        List<Record> additionDOList = new ArrayList<Record>();
         Date[] dates = null;
         switch (searchType) {
             case DAY:
@@ -60,19 +75,55 @@ public class RecordsData extends DataSource {
                 dates = getMonthDates();
                 break;
         }
+        return getRecordsInDates(dates, isPrivate);
+    }
+
+    public List<Record> getRecordsInDates(Date[] dates, boolean isPrivate) {
+        List<Record> additionDOList = new ArrayList<Record>();
         Cursor cursor;
         try {
-            cursor = getRWDb().rawQuery("select * from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime() +", " + DB.RecordTableInfo.COL_IS_PRIVATE + "=" + "=" + (isPrivate ? 1: 0), null);
+            cursor = getRWDb().rawQuery("select * from " + DB.RecordTableInfo.TBL_NAME + " where date BETWEEN " + dates[0].getTime() + " AND " + dates[1].getTime() + " AND " + DB.RecordTableInfo.COL_IS_PRIVATE + "=" + (isPrivate ? 1 : 0), null);
             cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Record additionDO = new Record(cursor);
-                additionDOList.add(additionDO);
-                cursor.moveToNext();
-            }
-            cursor.close();
+            additionDOList = parseRecordFromCursor(cursor);
         } catch (SQLException e) {
             Log.e(TAG, "SQLException getRecordList()", e);
         }
+        return additionDOList;
+    }
+
+    public List<Record> getSortRecords(boolean isPrivate) {
+        List<Record> additionDOList = new ArrayList<Record>();
+        Cursor cursor;
+        try {
+            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_IS_PRIVATE + "=" + (isPrivate ? 1 : 0), null, null, null, DB.RecordTableInfo.COL_COST + " ASC");
+            additionDOList = parseRecordFromCursor(cursor);
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException getRecordList()", e);
+        }
+        return additionDOList;
+    }
+
+    public List<Record> getRecordsWithCategory(int categoryId, boolean isPrivate) {
+        List<Record> additionDOList = new ArrayList<Record>();
+        Cursor cursor;
+        try {
+            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_IS_PRIVATE + "=" + (isPrivate ? 1 : 0) + " AND " + DB.RecordTableInfo.COL_CATEGORY_ID + "=" + categoryId, null, null, null, DB.RecordTableInfo.COL_COST + " ASC");
+            additionDOList = parseRecordFromCursor(cursor);
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException getRecordList()", e);
+        }
+        return additionDOList;
+    }
+
+    private List<Record> parseRecordFromCursor(Cursor cursor) {
+        List<Record> additionDOList = new ArrayList<Record>();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Record additionDO = new Record(cursor);
+            additionDOList.add(additionDO);
+            cursor.moveToNext();
+        }
+        cursor.close();
         return additionDOList;
     }
 

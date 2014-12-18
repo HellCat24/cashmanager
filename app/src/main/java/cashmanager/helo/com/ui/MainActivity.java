@@ -4,8 +4,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
@@ -22,6 +24,7 @@ import cashmanager.helo.com.R;
 import cashmanager.helo.com.data.MyMenu;
 import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.db.data.CategoryData;
 import cashmanager.helo.com.model.bd.Budget;
 import cashmanager.helo.com.ui.menu.BudgetFragment;
 import cashmanager.helo.com.ui.menu.AddRecordFragment;
@@ -32,6 +35,9 @@ import cashmanager.helo.com.ui.menu.ReportFragment;
 public class MainActivity extends FragmentActivity {
 
     public static String ACTION_REPORT = "action_report";
+    public static String ACTION_ADD = "action_add";
+
+    private static String IS_FIRST_LAUNCH = "is_first_launch";
 
     private FragmentManager mFragmentManager;
 
@@ -39,13 +45,21 @@ public class MainActivity extends FragmentActivity {
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
+    private SharedPreferences mSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mFragmentManager = getFragmentManager();
-        initFragments(savedInstanceState);
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (mSettings.getBoolean(IS_FIRST_LAUNCH, true)) {
+            mSettings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
+            CategoryData categoryData  = DBHelper.get().getCategoryData();
+            for (String categoryTitle : getResources().getStringArray(R.array.Category)) {
+                categoryData.addCategory(categoryTitle);
+            }
+        }
         initData();
         initUI();
     }
@@ -102,9 +116,9 @@ public class MainActivity extends FragmentActivity {
         getActionBar().setHomeButtonEnabled(true);
     }
 
-    private void initData(){
-        BudgetData data =  DBHelper.get().getBudgetDataSource();
-        if(data.getBudgetList().size()==0){
+    private void initData() {
+        BudgetData data = DBHelper.get().getBudgetDataSource();
+        if (data.getBudgetList().size() == 0) {
             data.addBudgetRecord(new Budget(new Date(), BudgetData.EMPTY_BUDGET));
         }
     }
@@ -122,8 +136,21 @@ public class MainActivity extends FragmentActivity {
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
-    private void initFragments(Bundle savedInstanceState) {
+    private void initFragments() {
         setFragment(new RecordListFragment(), RecordListFragment.class.getName());
+    }
+
+    @Override
+    protected void onResume() {
+        String action = getIntent().getAction();
+        if(action.equals(ACTION_REPORT)){
+            setFragment(new ReportFragment(), ReportFragment.class.getName());
+        } else if(action.equals(ACTION_ADD)){
+            setFragment(new AddRecordFragment(), AddRecordFragment.class.getName());
+        } else {
+            initFragments();
+        }
+        super.onResume();
     }
 
     @Override

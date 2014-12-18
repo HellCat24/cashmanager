@@ -22,10 +22,10 @@ import cashmanager.helo.com.model.DateTime;
 public class DateTimePicker extends DialogFragment {
 
     public static final String TAG_FRAG_DATE_TIME = "fragDateTime";
-    private static final String KEY_DIALOG_TITLE = "dialogTitle";
-    private static final String KEY_INIT_DATE = "initDate";
-    private static final String TAG_DATE = "date";
-    private static final String TAG_TIME = "time";
+    public static final String KEY_DIALOG_TITLE = "dialogTitle";
+    public static final String KEY_INIT_DATE = "initDate";
+    public static final String TAG_DATE = "date";
+    public static final String TAG_TIME = "time";
     private Context mContext;
     private ButtonClickListener mButtonClickListener;
     private OnDateTimeSetListener mOnDateTimeSetListener;
@@ -48,10 +48,11 @@ public class DateTimePicker extends DialogFragment {
         mButtonClickListener = new ButtonClickListener();
     }
 
-    public static DateTimePicker newInstance(Date initDate) {
+    public static DateTimePicker newInstance(Date initDate, String title) {
         DateTimePicker mDateTimePicker = new DateTimePicker();
         Bundle mBundle = new Bundle();
         mBundle.putSerializable(KEY_INIT_DATE, initDate);
+        mBundle.putString(KEY_DIALOG_TITLE, title);
         mDateTimePicker.setArguments(mBundle);
         return mDateTimePicker;
     }

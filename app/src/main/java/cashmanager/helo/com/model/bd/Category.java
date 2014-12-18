@@ -1,5 +1,7 @@
 package cashmanager.helo.com.model.bd;
 
+import android.database.Cursor;
+
 import com.orm.SugarRecord;
 
 /**
@@ -7,12 +9,16 @@ import com.orm.SugarRecord;
  */
 public class Category {
 
-    public String id;
+    public int id;
 
     public String title;
 
-    public String description;
+    public Category(Cursor cursor) {
+        this.id = cursor.getInt(0);
+        this.title = cursor.getString(1);
+    }
 
-
-
+    public Category(String title) {
+        this.title = title;
+    }
 }

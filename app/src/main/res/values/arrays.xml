@@ -7,4 +7,20 @@
         <item>Settings</item>
     </string-array>
 
+    <string-array name="Category">
+        <item>Food</item>
+        <item>Cloth</item>
+        <item>Rent</item>
+        <item>Transport</item>
+    </string-array>
+
+    <string-array name="Report">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Dates</item>
+        <item>Category</item>
+        <item>Costs</item>
+    </string-array>
+
 </resources>

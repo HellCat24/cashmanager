@@ -13,9 +13,11 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,7 +31,9 @@ import java.util.Date;
 import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.db.data.CategoryData;
 import cashmanager.helo.com.db.data.RecordsData;
+import cashmanager.helo.com.model.bd.Category;
 import cashmanager.helo.com.model.bd.Record;
 import cashmanager.helo.com.ui.MainActivity;
 import cashmanager.helo.com.utils.ImageRetriever;
@@ -43,7 +47,7 @@ public class AddRecordFragment extends Fragment {
 
     private EditText mDatePicker;
     private EditText mCost;
-    private EditText mDescription;
+    private MultiAutoCompleteTextView mDescription;
     private TextView mChooseImage;
     private CheckBox mPrivate;
 
@@ -66,6 +70,7 @@ public class AddRecordFragment extends Fragment {
 
     private RecordsData mRecordsDataSource;
     private BudgetData mBudgetData;
+    private CategoryData mCategoryData;
 
     private int mBudgetValue;
 
@@ -77,6 +82,7 @@ public class AddRecordFragment extends Fragment {
         DBHelper dbHelper = DBHelper.get();
         mRecordsDataSource = dbHelper.getRecordsDataSource();
         mBudgetData = dbHelper.getBudgetDataSource();
+        mCategoryData = dbHelper.getCategoryData();
         mDate = new Date();
         initUI(view);
         setUpListeners();
@@ -88,8 +94,33 @@ public class AddRecordFragment extends Fragment {
 
         mPrivate = (CheckBox) view.findViewById(R.id.privateCheckBox);
         mDatePicker = (EditText) view.findViewById(R.id.txt_time);
-        mDescription = (EditText) view.findViewById(R.id.etxt_description);
+        mDescription = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_description);
+        ArrayAdapter<String> titleAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, mRecordsDataSource.getRecordsTitle());
+        mDescription.setAdapter(titleAdapter);
+        mDescription.setThreshold(2);
+        mDescription.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                mDescription.showDropDown();
+                return false;
+            }
+        });
         mCategory = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_category);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, mCategoryData.getCategoryTitleList());
+        mCategory.setAdapter(categoryAdapter);
+        mCategory.setThreshold(2);
+        mCategory.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                mCategory.showDropDown();
+                return false;
+            }
+        });
+        mCategory.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         mChooseImage = (TextView) view.findViewById(R.id.img_choose_attach);
         mAttachmentImage = (ImageView) view.findViewById(R.id.img_attach);
         mCost = (EditText) view.findViewById(R.id.etxt_cost);
@@ -107,17 +138,6 @@ public class AddRecordFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivityForResult(mImageRetriever.getImageFromCameraIntent(), ImageRetriever.CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-            }
-        });
-        mCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
@@ -160,6 +180,7 @@ public class AddRecordFragment extends Fragment {
         record.date = mDate;
         record.cost = cost;
         record.isPrivate = mPrivate.isChecked();
+        record.category = new Category(mCategory.getText().toString());
         /*if(mBitmapPath!=null){
             record.attachment = new Attachment();
             record.attachment.file = mBitmapPath;
@@ -254,7 +275,7 @@ public class AddRecordFragment extends Fragment {
     }
 
     private void showTimeDialog() {
-        DateTimePicker dateTimePicker = DateTimePicker.newInstance(new Date());
+        DateTimePicker dateTimePicker = DateTimePicker.newInstance(new Date(), getString(R.string.select_date));
         dateTimePicker.show(getFragmentManager(), DateTimePicker.class.getName());
         DateTimePicker.OnDateTimeSetListener myCallBack = new DateTimePicker.OnDateTimeSetListener() {
 

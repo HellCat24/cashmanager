@@ -20,9 +20,7 @@ public class Record {
 
     public boolean isPrivate;
 
-
-
-    //public Category category;
+    public Category category;
 
     //public Attachment attachment;
 

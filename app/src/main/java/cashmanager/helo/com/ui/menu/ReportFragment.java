@@ -1,6 +1,9 @@
 package cashmanager.helo.com.ui.menu;
 
+import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -9,21 +12,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.db.data.BudgetData;
+import cashmanager.helo.com.db.data.CategoryData;
 import cashmanager.helo.com.db.data.RecordsData;
+import cashmanager.helo.com.model.DateTime;
 import cashmanager.helo.com.model.ReportItem;
+import cashmanager.helo.com.model.bd.Category;
 import cashmanager.helo.com.model.bd.Record;
 import cashmanager.helo.com.ui.adapter.ReportAdapter;
 import cashmanager.helo.com.view.CustomProgressBar;
+import cashmanager.helo.com.view.DateTimePicker;
 
 /**
  * Created by Mazhukin Oleh on 10.11.2014.
@@ -36,6 +44,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
     private RecordsData mRecordsData;
     private BudgetData mBudgetData;
+    private CategoryData mCategoryData;
 
     private ListView mReportListView;
     private ReportAdapter mReportAdapter;
@@ -46,17 +55,44 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     private TextView mMonthOverAll;
     private TextView mBudgetLeft;
 
-    private SharedPreferences mSettings;
+    private Date mStartDate;
+    private Date mEndDate;
 
     private int mBudgetValue;
+
+    private boolean isPrivate;
+
+    private ActionBar mActionBar;
+
+    private enum ReportType {Day, Week, Month, Dates, Category, Costs}
+
+    private DateTimePicker.OnDateTimeSetListener myCallBack = new DateTimePicker.OnDateTimeSetListener() {
+
+        private boolean isEndDate;
+
+        @Override
+        public void DateTimeSet(Date date) {
+            if (!isEndDate) {
+                isEndDate = true;
+                mStartDate = date;
+                showTimeDialog("Select end date");
+            } else {
+                isEndDate = false;
+                mEndDate = date;
+                initDiagram(getRecordsInDate(new Date[]{mStartDate, mEndDate}));
+            }
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_report, container, false);
         DBHelper dbHelper = DBHelper.get();
-        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mActionBar = getActivity().getActionBar();
+        isPrivate = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean(getString(R.string.settings_private), false);
         mRecordsData = dbHelper.getRecordsDataSource();
         mBudgetData = dbHelper.getBudgetDataSource();
+        mCategoryData = dbHelper.getCategoryData();
         initUI(view);
         initData();
         return view;
@@ -92,21 +128,73 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
             }
         });
         mReportMainView.startAnimation(fadeIn);
+        initActionBar();
+    }
+
+    private void initActionBar() {
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.Report));
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mActionBar.setListNavigationCallbacks(spinnerArrayAdapter, new ActionBar.OnNavigationListener() {
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition, long itemId) {
+                switch (ReportType.values()[itemPosition]) {
+                    case Day:
+                        initDiagram(getRecordsWithinFilter(RecordsData.TimeSearchType.DAY));
+                        break;
+                    case Week:
+                        initDiagram(getRecordsWithinFilter(RecordsData.TimeSearchType.WEEK));
+                        break;
+                    case Month:
+                        initDiagram(getRecordsWithinFilter(RecordsData.TimeSearchType.MONTH));
+                        break;
+                    case Dates:
+                        showTimeDialog(getString(R.string.select_start_date));
+                        break;
+                    case Category:
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(getString(R.string.choose_category))
+                                .setItems(mCategoryData.getCategoryTitleList(), new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        initDiagram(getRecordsWithCategory(which + 1));
+                                    }
+                                });
+                        builder.create().show();
+                        break;
+                    case Costs:
+                        initDiagram(getSortRecords());
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     private void initData() {
-        mMaxPrice.setText("Max cost: "+mRecordsData.getMaxPrice());
-        mMinPrice.setText("Min cost: "+mRecordsData.getMinPrice());
-        mWeekOverAll.setText("Week overall: "+ mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.WEEK) + "");
-        mMonthOverAll.setText("Month overall: " +mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.MONTH) + "");
-        if (mRecordsData.getRecordList(mSettings.getBoolean(getString(R.string.settings_private), false)).size() > 0) {
-            initDiagram();
-        }
+        mMaxPrice.setText(getString(R.string.max_cost) + " " + mRecordsData.getMaxPrice());
+        mMinPrice.setText(getString(R.string.min_cost) + " " + mRecordsData.getMinPrice());
+        mWeekOverAll.setText(getString(R.string.week_overall) + " " + mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.WEEK));
+        mMonthOverAll.setText(getString(R.string.month_overall) + " " + mRecordsData.getRecordsPrice(RecordsData.TimeSearchType.MONTH));
     }
 
-    private void initDiagram() {
+    private List<Record> getRecordsWithinFilter(RecordsData.TimeSearchType timeSearchType) {
+        return mRecordsData.getRecordListWithinDates(timeSearchType, isPrivate);
+    }
+
+    private List<Record> getRecordsInDate(Date[] dates) {
+        return mRecordsData.getRecordsInDates(dates, isPrivate);
+    }
+
+    private List<Record> getRecordsWithCategory(int categoryId) {
+        return mRecordsData.getRecordsWithCategory(categoryId, isPrivate);
+    }
+
+    private List<Record> getSortRecords() {
+        return mRecordsData.getSortRecords(isPrivate);
+    }
+
+    private void initDiagram(final List<Record> records) {
         final List<Float> floats = new ArrayList<Float>();
-        final List<Record> records = mRecordsData.getRecordList(mSettings.getBoolean(getString(R.string.settings_private), false));
         final List<ReportItem> reports = new ArrayList<ReportItem>();
         for (Record record : records) {
             reports.add(new ReportItem(record));
@@ -118,10 +206,11 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 for (int i = 0; i < records.size(); i++) {
                     reports.get(i).color = colors[i];
                 }
-                mBudgetLeft.setText("Budget left: "+(mBudgetData.getCurrentBudget() - sum));
+                mBudgetLeft.setText("Budget left: " + (mBudgetData.getCurrentBudget() - sum));
                 mReportListView.setAdapter(new ReportAdapter(getActivity(), reports));
             }
         });
+        mDiagram.invalidate();
     }
 
     @Override
@@ -132,4 +221,15 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void showTimeDialog(String title) {
+        DateTimePicker dateTimePicker = DateTimePicker.newInstance(new Date(), title);
+        dateTimePicker.show(getFragmentManager(), DateTimePicker.class.getName());
+        dateTimePicker.setOnDateTimeSetListener(myCallBack);
+    }
+
+    @Override
+    public void onDetach() {
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        super.onDetach();
+    }
 }
