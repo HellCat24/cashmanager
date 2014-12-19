@@ -55,8 +55,7 @@ public class MainActivity extends FragmentActivity {
         mFragmentManager = getFragmentManager();
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         if (mSettings.getBoolean(IS_FIRST_LAUNCH, true)) {
-            mSettings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
-            CategoryData categoryData  = DBHelper.get().getCategoryData();
+            CategoryData categoryData = DBHelper.get().getCategoryData();
             for (String categoryTitle : getResources().getStringArray(R.array.category)) {
                 categoryData.addCategory(categoryTitle);
             }
@@ -144,12 +143,16 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         String action = getIntent().getAction();
-        if(action.equals(ACTION_REPORT)){
+        if (action.equals(ACTION_REPORT)) {
             setFragment(new ReportFragment(), ReportFragment.class.getName());
-        } else if(action.equals(ACTION_ADD)){
+        } else if (action.equals(ACTION_ADD)) {
             setFragment(new AddRecordFragment(), AddRecordFragment.class.getName());
-        } else if(!isResumed){
+        } else if (!isResumed) {
             initFragments();
+            if (mSettings.getBoolean(IS_FIRST_LAUNCH, true)) {
+                setFragment(new BudgetFragment(), BudgetFragment.class.getName());
+                mSettings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
+            }
         }
         isResumed = true;
         super.onResume();
