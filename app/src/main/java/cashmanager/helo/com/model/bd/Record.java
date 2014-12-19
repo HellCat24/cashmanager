@@ -3,12 +3,13 @@ package cashmanager.helo.com.model.bd;
 import android.content.Context;
 import android.database.Cursor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Mazhukin Oleh on 10.11.2014.
  */
-public class Record {
+public class Record implements Serializable{
 
     public int id;
 
@@ -20,7 +21,13 @@ public class Record {
 
     public boolean isPrivate;
 
-    public Category category;
+    public String filePath;
+
+    public String categoryTitle;
+
+    public boolean isSubRecord;
+
+    public boolean parentId;
 
     //public Attachment attachment;
 
@@ -56,5 +63,8 @@ public class Record {
         date = new Date(cursor.getLong(1));
         description = cursor.getString(2);
         cost = cursor.getInt(3);
+        isPrivate = cursor.getInt(4)>0;
+        filePath  = cursor.getString(5);
+        categoryTitle = cursor.getString(6);
     }
 }

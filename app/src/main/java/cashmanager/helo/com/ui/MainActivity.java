@@ -46,6 +46,7 @@ public class MainActivity extends FragmentActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private SharedPreferences mSettings;
+    private boolean isResumed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class MainActivity extends FragmentActivity {
         if (mSettings.getBoolean(IS_FIRST_LAUNCH, true)) {
             mSettings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
             CategoryData categoryData  = DBHelper.get().getCategoryData();
-            for (String categoryTitle : getResources().getStringArray(R.array.Category)) {
+            for (String categoryTitle : getResources().getStringArray(R.array.category)) {
                 categoryData.addCategory(categoryTitle);
             }
         }
@@ -147,9 +148,10 @@ public class MainActivity extends FragmentActivity {
             setFragment(new ReportFragment(), ReportFragment.class.getName());
         } else if(action.equals(ACTION_ADD)){
             setFragment(new AddRecordFragment(), AddRecordFragment.class.getName());
-        } else {
+        } else if(!isResumed){
             initFragments();
         }
+        isResumed = true;
         super.onResume();
     }
 

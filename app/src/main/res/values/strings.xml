@@ -34,5 +34,6 @@
     <string name="month_overall">"Month overall: "</string>
     <string name="select_date">Select Date</string>
     <string name="choose_category">Choose Category</string>
+    <string name="edit">Edit</string>
 
 </resources>

@@ -26,8 +26,8 @@ public class RecordsData extends DataSource {
             cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, null, null, null, null, null);
             cursor.moveToFirst();
             int i = 0;
+            titles = new String[cursor.getCount()];
             while (!cursor.isAfterLast()) {
-                titles = new String[cursor.getCount()];
                 titles[i] = cursor.getString(2);
                 cursor.moveToNext();
                 i++;
@@ -60,6 +60,23 @@ public class RecordsData extends DataSource {
             Log.e(TAG, "SQLException getRecordList()", e);
         }
         return additionDOList;
+    }
+
+
+    public Record getRecordById(int id) {
+        Record record = null;
+        Cursor cursor;
+        try {
+            cursor = getRWDb().query(DB.RecordTableInfo.TBL_NAME, null, DB.RecordTableInfo.COL_ID + "=?", new String[]{Integer.toString(id)}, null, null, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                record = new Record(cursor);
+                cursor.moveToNext();
+            }
+        } catch (SQLException e) {
+            Log.e(TAG, "SQLException getRecordById()", e);
+        }
+        return record;
     }
 
     public List<Record> getRecordListWithinDates(TimeSearchType searchType, boolean isPrivate) {
@@ -230,15 +247,20 @@ public class RecordsData extends DataSource {
         values.put(DB.RecordTableInfo.COL_DESCRIPTION, record.description);
         values.put(DB.RecordTableInfo.COL_COST, record.cost);
         values.put(DB.RecordTableInfo.COL_IS_PRIVATE, record.isPrivate);
-        //values.put(DB.RecordTableInfo.COL_FILE_PATH, record.a);
+        values.put(DB.RecordTableInfo.COL_FILE_PATH, record.filePath);
+        values.put(DB.RecordTableInfo.COL_CATEGORY_TITLE, record.categoryTitle);
 
         if (record.id > 0) {
-            values.put(DB.RecordTableInfo.COL_ID, record.id);
+            try {
+                getRWDb().update(DB.RecordTableInfo.TBL_NAME, values, DB.RecordTableInfo.COL_ID + "="+record.id, null);
+            } catch (SQLException e) {
+                Log.e(TAG, "SQLException updateRecord", e);
+            }
         } else {
             try {
                 getRWDb().insert(DB.RecordTableInfo.TBL_NAME, null, values);
             } catch (SQLException e) {
-                Log.e(TAG, "SQLException updateRecord", e);
+                Log.e(TAG, "SQLException addRecord", e);
             }
         }
     }

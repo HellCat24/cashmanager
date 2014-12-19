@@ -58,6 +58,8 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     private Date mStartDate;
     private Date mEndDate;
 
+    private boolean isFirstLaunch = true;
+
     private int mBudgetValue;
 
     private boolean isPrivate;
@@ -133,7 +135,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
     private void initActionBar() {
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.Report));
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.report));
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mActionBar.setListNavigationCallbacks(spinnerArrayAdapter, new ActionBar.OnNavigationListener() {
             @Override
@@ -210,7 +212,13 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 mReportListView.setAdapter(new ReportAdapter(getActivity(), reports));
             }
         });
-        mDiagram.invalidate();
+        if(!isFirstLaunch){
+            mDiagram.invalidate();
+        } else {
+            isFirstLaunch = false;
+        }
+
+
     }
 
     @Override

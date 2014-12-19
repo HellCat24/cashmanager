@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.Date;
 
@@ -45,15 +48,25 @@ import cashmanager.helo.com.view.Utils;
  */
 public class AddRecordFragment extends Fragment {
 
+    public static String BUNDLE_REPORT = "report";
+
+    public static AddRecordFragment newInstance(Record record) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BUNDLE_REPORT, record);
+        AddRecordFragment addRecordFragment = new AddRecordFragment();
+        addRecordFragment.setArguments(bundle);
+        return addRecordFragment;
+    }
+
     private EditText mDatePicker;
     private EditText mCost;
-    private MultiAutoCompleteTextView mDescription;
+    private AutoCompleteTextView mDescription;
     private TextView mChooseImage;
     private CheckBox mPrivate;
 
     private String mBitmapPath;
 
-    private MultiAutoCompleteTextView mCategory;
+    private AutoCompleteTextView mCategory;
 
     private ImageView mAttachmentImage;
 
@@ -74,6 +87,8 @@ public class AddRecordFragment extends Fragment {
 
     private int mBudgetValue;
 
+    private Record mReportToEdit;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_record, container, false);
@@ -87,6 +102,12 @@ public class AddRecordFragment extends Fragment {
         initUI(view);
         setUpListeners();
         initData();
+        if (getArguments() != null) {
+            mReportToEdit = (Record) getArguments().getSerializable(BUNDLE_REPORT);
+        }
+        if (mReportToEdit != null) {
+            initEditRecord(mReportToEdit);
+        }
         return view;
     }
 
@@ -94,33 +115,30 @@ public class AddRecordFragment extends Fragment {
 
         mPrivate = (CheckBox) view.findViewById(R.id.privateCheckBox);
         mDatePicker = (EditText) view.findViewById(R.id.txt_time);
-        mDescription = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_description);
+        mDescription = (AutoCompleteTextView) view.findViewById(R.id.etxt_description);
         ArrayAdapter<String> titleAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, mRecordsDataSource.getRecordsTitle());
         mDescription.setAdapter(titleAdapter);
         mDescription.setThreshold(2);
         mDescription.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
+            public boolean onTouch(View v, MotionEvent event) {
                 mDescription.showDropDown();
                 return false;
             }
         });
-        mCategory = (MultiAutoCompleteTextView) view.findViewById(R.id.etxt_category);
+        mCategory = (AutoCompleteTextView) view.findViewById(R.id.etxt_category);
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, mCategoryData.getCategoryTitleList());
         mCategory.setAdapter(categoryAdapter);
         mCategory.setThreshold(2);
         mCategory.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event)
-            {
+            public boolean onTouch(View v, MotionEvent event) {
                 mCategory.showDropDown();
                 return false;
             }
         });
-        mCategory.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         mChooseImage = (TextView) view.findViewById(R.id.img_choose_attach);
         mAttachmentImage = (ImageView) view.findViewById(R.id.img_attach);
         mCost = (EditText) view.findViewById(R.id.etxt_cost);
@@ -180,14 +198,16 @@ public class AddRecordFragment extends Fragment {
         record.date = mDate;
         record.cost = cost;
         record.isPrivate = mPrivate.isChecked();
-        record.category = new Category(mCategory.getText().toString());
-        /*if(mBitmapPath!=null){
-            record.attachment = new Attachment();
-            record.attachment.file = mBitmapPath;
-        }*/
+        record.categoryTitle = mCategory.getText().toString();
+        record.filePath = mBitmapPath;
+        if(mReportToEdit!=null){
+            record.id = mReportToEdit.id;
+        }
         mBudgetData.updateBudget(mBudgetValue - record.cost);
         mRecordsDataSource.addRecord(record);
-
+        if(record.categoryTitle.length()>0){
+            mCategoryData.addCategory(record.categoryTitle);
+        }
         checkLimitations();
     }
 
@@ -259,6 +279,15 @@ public class AddRecordFragment extends Fragment {
     private void initData() {
         mBudgetValue = mBudgetData.getCurrentBudget();
         mDatePicker.setText(Utils.getDateAndTime(mDate));
+    }
+
+    private void initEditRecord(Record record) {
+        mPrivate.setChecked(record.isPrivate);
+        mDatePicker.setText(record.date.toString());
+        mDescription.setText(record.description);
+        mCategory.setText(record.categoryTitle);
+        ImageLoader.getInstance().displayImage("file:/" + record.filePath, mAttachmentImage);
+        mCost.setText(record.cost+"");
     }
 
     @Override

@@ -7,20 +7,26 @@
         <item>Settings</item>
     </string-array>
 
-    <string-array name="Category">
+    <string-array name="category">
         <item>Food</item>
         <item>Cloth</item>
         <item>Rent</item>
         <item>Transport</item>
     </string-array>
 
-    <string-array name="Report">
+    <string-array name="report">
         <item>Day</item>
         <item>Week</item>
         <item>Month</item>
         <item>Dates</item>
         <item>Category</item>
         <item>Costs</item>
+    </string-array>
+
+    <string-array name="actions">
+        <item>Open</item>
+        <item>Edit</item>
+        <item>Delete</item>
     </string-array>
 
 </resources>

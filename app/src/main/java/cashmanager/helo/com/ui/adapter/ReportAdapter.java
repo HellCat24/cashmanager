@@ -71,8 +71,16 @@ public class ReportAdapter extends ArrayAdapter<ReportItem> {
 
     private void initItem(RecordHolder holder, ReportItem item) {
         holder.date.setText(Utils.getDate(item.date));
-        holder.description.setText(item.description);
-        //holder.category.setText(item.category.title);
+        if(item.description.length()>0){
+            holder.description.setText("Description:"+" "+item.description);
+        } else {
+            holder.description.setText("Description: empty");
+        }
+        if(item.categoryTitle!=null&&item.categoryTitle.length()>0){
+            holder.category.setText(item.categoryTitle);
+        } else {
+            holder.category.setText("-");
+        }
         if (item.cost > 0) {
             holder.cost.setTextColor(Color.GREEN);
         } else {

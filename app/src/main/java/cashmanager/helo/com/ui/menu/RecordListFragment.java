@@ -22,6 +22,7 @@ import cashmanager.helo.com.db.DBHelper;
 import cashmanager.helo.com.R;
 import cashmanager.helo.com.db.data.RecordsData;
 import cashmanager.helo.com.model.bd.Record;
+import cashmanager.helo.com.ui.MainActivity;
 import cashmanager.helo.com.ui.adapter.RecordsAdapter;
 
 /**
@@ -36,6 +37,8 @@ public class RecordListFragment extends Fragment {
 
     private List<Record> mRecords;
     private SharedPreferences mSettings;
+
+    private enum Actions {OPEN, EDIT, DELETE}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,14 +77,32 @@ public class RecordListFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 final AlertDialog.Builder b = new AlertDialog.Builder(getActivity());
                 b.setIcon(android.R.drawable.ic_dialog_alert);
-                b.setPositiveButton("Delete dialog", new DialogInterface.OnClickListener() {
+                b.setItems(R.array.actions, new DialogInterface.OnClickListener() {
+
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        mRecordsAdapter.deleteItem(position);
-                        mRecordsDataSource.deleteRecord(mRecordsAdapter.getItem(position).id);
+                        switch (Actions.values()[whichButton]) {
+                            case OPEN:
+                                ((MainActivity) getActivity()).setFragment(RecordFragment.newInstance(mRecordsAdapter.getItem(position)), RecordFragment.class.getName());
+                                break;
+                            case EDIT:
+                                ((MainActivity) getActivity()).setFragment(AddRecordFragment.newInstance(mRecordsAdapter.getItem(position)), AddRecordFragment.class.getName());
+                                break;
+                            case DELETE:
+                                mRecordsAdapter.deleteItem(position);
+                                mRecordsDataSource.deleteRecord(mRecordsAdapter.getItem(position).id);
+                                break;
+                        }
+
                     }
                 });
                 b.show();
                 return false;
+            }
+        });
+        mRecordsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ((MainActivity) getActivity()).setFragment(RecordFragment.newInstance(mRecordsAdapter.getItem(position)), RecordFragment.class.getName());
             }
         });
     }
@@ -98,20 +119,6 @@ public class RecordListFragment extends Fragment {
                     mRecordsList.setAdapter(mRecordsAdapter);
                 }
             }
-        }
-    }
-
-    private class onEditRecord implements View.OnClickListener {
-
-        private Record mRecord;
-
-        public onEditRecord(Record record) {
-            mRecord = record;
-        }
-
-        @Override
-        public void onClick(View v) {
-
         }
     }
 

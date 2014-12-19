@@ -18,7 +18,7 @@ import cashmanager.helo.com.model.bd.Budget;
  */
 public class BudgetData extends DataSource {
 
-    public static final int EMPTY_BUDGET = 0;
+    public static final int EMPTY_BUDGET = -1;
 
     private static final int CURRENT_BUDGET = 1;
 

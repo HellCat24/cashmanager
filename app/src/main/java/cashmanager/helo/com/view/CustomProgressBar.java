@@ -141,8 +141,6 @@ public class CustomProgressBar extends View {
                     }
                 }
                 diagramComplete.onDiagramComplete(sum, colors);
-                diagramAngles = null;
-                colors = null;
                 sum = 0;
             }
         }

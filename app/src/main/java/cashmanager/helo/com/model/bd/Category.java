@@ -4,10 +4,12 @@ import android.database.Cursor;
 
 import com.orm.SugarRecord;
 
+import java.io.Serializable;
+
 /**
  * Created by Mazhukin Oleh on 10.11.2014.
  */
-public class Category {
+public class Category implements Serializable{
 
     public int id;
 

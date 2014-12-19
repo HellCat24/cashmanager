@@ -8,11 +8,12 @@ public class DB {
             + RecordTableInfo.COL_DATE + " INTEGER, "
             + RecordTableInfo.COL_DESCRIPTION + " VARCHAR(255), "
             + RecordTableInfo.COL_COST + " INTEGER, "
-            + RecordTableInfo.COL_CATEGORY_ID + " INTEGER, "
             + RecordTableInfo.COL_IS_PRIVATE + " INTEGER, "
+            + RecordTableInfo.COL_FILE_PATH + " VARCHAR(255), "
+            + RecordTableInfo.COL_CATEGORY_TITLE + " VARCHAR(255), "
+            + RecordTableInfo.COL_CATEGORY_ID + " INTEGER, "
             + RecordTableInfo.COL_PARENT_ID + " INTEGER, "
-            + RecordTableInfo.IS_SUB_RECORD + " INTEGER, "
-            + RecordTableInfo.COL_FILE_PATH + " VARCHAR(255) "
+            + RecordTableInfo.IS_SUB_RECORD + " INTEGER "
             + " );";
 
     public static final String CATEGORY_TABLE = " CREATE TABLE "
@@ -50,6 +51,7 @@ public class DB {
         public static final String COL_DESCRIPTION = "description";
         public static final String COL_COST = "cost";
         public static final String COL_CATEGORY_ID = "category_id";
+        public static final String COL_CATEGORY_TITLE = "category_title";
         public static final String COL_IS_PRIVATE = "is_public";
         public static final String COL_FILE_PATH = "file_path";
 

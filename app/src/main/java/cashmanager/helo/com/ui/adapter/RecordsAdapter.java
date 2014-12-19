@@ -71,8 +71,16 @@ public class RecordsAdapter extends ArrayAdapter<Record> {
 
     private void initItem(RecordHolder holder, Record item) {
         holder.date.setText(Utils.getDate(item.date));
-        holder.description.setText(item.description);
-        //holder.category.setText(item.category.title);
+        if(item.description.length()>0){
+            holder.description.setText("Description:"+" "+item.description);
+        } else {
+            holder.description.setText("Description: empty");
+        }
+        if(item.categoryTitle.length()>0){
+            holder.category.setText(item.categoryTitle);
+        } else {
+            holder.category.setText("-");
+        }
         holder.cost.setTextColor(Color.RED);
         holder.cost.setText(Integer.toString(Math.abs(item.cost)));
     }
